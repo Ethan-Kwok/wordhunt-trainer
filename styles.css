@@ -1,0 +1,213 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+
+    color: #fff;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1, p {
+    margin: 0;
+    padding: 20px;
+}
+
+.phoneScreen {    
+    background: url('images/background-wallpaper-2.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Height of the screen */
+    width: calc(100vh * 0.462); /* 828 x 1792 aspect ratio */
+    position: relative;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1;
+}
+
+/* 
+TODO temp maybe delete this if spacing works properly    
+width: 76%;  Approximate size based on screen width; adjust as needed
+max-width: calc(76vh * 0.76);  For wide screens, make sure the box isn't too tall since it's based on screen width
+padding-bottom: min(76%, calc(76vh * 0.76));  Make it square  
+*/
+.letters-container {
+    width: 76%;
+    aspect-ratio : 1 / 1;
+    /* max-width: calc(76vh * 0.76);  */
+    /* padding-bottom: min(76%, calc(76vh * 0.76));   */
+
+    background-color: #4C5F49;
+    border: 7px solid #A4E593; /* Approximate size; adjust as needed */
+    border-radius: 5%;
+    position: absolute;
+    top: 63%; /* Slightly below vertical center, adjust as needed */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: content-box; /* Don't include border in the size calculation */
+    z-index: -1;
+
+    box-shadow: 0 6px 6px #999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 5%; */
+}
+
+/* .button {
+    font-size: 1.2rem;
+    padding: 8px 16px;
+    margin-bottom: 10px;
+} */
+
+button {
+    padding: 10px 20px;
+    font-size: 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 4%; /* Adjust this value to move the button higher or lower */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button:hover,
+button:active {
+    background-color: #82C09A;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* TODO CORRECT THIS */
+
+#scoreDisplayTextBox {
+    position: absolute;
+    margin-bottom: 625px;
+    z-index: 100;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 30px;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Arial', Gadget, sans-serif;
+    color: #333;
+    text-align: center;
+}
+
+/* Grid Styles */
+#grid {
+    width: 100%;
+    height: 100%;
+    
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: grid;
+
+    /* Default values. This is changed in the js script. */
+    grid-template-columns: repeat(4, 21%);
+    grid-template-rows: repeat(4, 21%);
+    gap: 3.2%;
+
+    justify-content: center;
+    align-content: center;
+}
+
+/* Individual Box Styles */
+.box {
+    border-radius: 8px;
+    
+    /* TODO set font size based on container size */
+    font-size: 50px;
+    font-family: 'Arial', Gadget, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 6px darkslategray;
+    /* background-color: #f0c895; */
+    background-image: url('images/letter-tile-background-2.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    user-select: none;
+    color: black;
+    background-size: contain;
+}
+.box.active {
+    background-color: #eeeeee;
+    position: relative;
+    z-index: 11;
+    animation: jiggle 0.2s ease forwards;
+}
+@keyframes jiggle {
+    0% {
+        transform: scale(1.09);
+    }
+    60% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1.07);
+    }
+}
+.use-success-color .box.active {
+    background-color: #7BF67A;
+    position: relative;
+    z-index: 11;
+}
+.use-repeated-word-color .box.active {
+    background-color: #e8e697;
+    position: relative;
+    z-index: 11;
+}
+
+/* Current Word TextBox Styles */
+#currWordTextBox {
+    /* background-color: white; */
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    font-family: 'Arial', Gadget, sans-serif;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+    display: inline-block;
+    font-size: 1.2rem;
+    padding: 8px 16px;
+    margin-bottom: 420px;
+    visibility: hidden;
+    position: absolute;
+}
+#currWordTextBox.use-success-color {
+    background-color: #7BF67A;
+}
+#currWordTextBox.use-repeated-word-color {
+    background-color: #e8e697;
+}
