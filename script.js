@@ -329,7 +329,7 @@ class Game {
         document.addEventListener('mouseup', () => this.handleMouseUp());
         document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
         document.addEventListener('touchend', () => this.handleTouchEnd());
-        document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        document.addEventListener('touchmove', (e) => this.handleTouchMove(e));
         this.grid.querySelectorAll('.box').forEach(box => {
             box.addEventListener('mousemove', (e) => this.handleMouseMove(e, box));
             box.addEventListener('mousedown', (e) => this.handleBoxClick(e, box));
@@ -357,7 +357,6 @@ class Game {
         }
     }
     handleTouchMove(e) {
-        e.preventDefault();
         const touch = e.touches[0];
         const boxes = this.grid.querySelectorAll('.box');
         
