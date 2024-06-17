@@ -327,25 +327,62 @@ class Game {
     addEventListeners() {
         document.addEventListener('mousedown', (e) => this.handleMouseDown(e));
         document.addEventListener('mouseup', () => this.handleMouseUp());
+        document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+        document.addEventListener('touchend', () => this.handleTouchEnd());
+        document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
         this.grid.querySelectorAll('.box').forEach(box => {
             box.addEventListener('mousemove', (e) => this.handleMouseMove(e, box));
             box.addEventListener('mousedown', (e) => this.handleBoxClick(e, box));
+            box.addEventListener('touchstart', (e) => this.handleBoxTouch(e, box));
         });
     }
 
+
     // Input detection
+    handleTouchStart(e) {
+        const touch = e.touches[0];
+        if (touch.target.classList.contains('box') && this.isInCenter(touch, touch.target)) {
+            this.isMouseDown = true;
+        }
+    }
     handleMouseDown(e) {
         if (e.target.classList.contains('box') && this.isInCenter(e, e.target)) {
             this.isMouseDown = true;
         }
     }
+
     handleMouseMove(e, box) {
         if (this.isMouseDown) {
             this.activateBox(e, box);
         }
     }
+    handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const boxes = this.grid.querySelectorAll('.box');
+        
+        // For some reason we can't attach the touchmove listeners to each box individually
+        // because only 1 runs at a time. So we attach it to the document itself and adjust.
+        boxes.forEach(box => {
+            const rect = box.getBoundingClientRect();
+            const isTouchWithinBox = touch.clientX >= rect.left &&
+                                     touch.clientX <= rect.right &&
+                                     touch.clientY >= rect.top &&
+                                     touch.clientY <= rect.bottom;
+    
+            if (this.isMouseDown && isTouchWithinBox) {
+
+                this.activateBox(touch, box);
+            }
+        });
+    }
+
     handleBoxClick(e, box) {
         this.activateBox(e, box);
+    }
+    handleBoxTouch(e, box) {
+        const touch = e.touches[0];
+        this.activateBox(touch, box);
     }
 
     handleMouseUp() {
@@ -354,9 +391,25 @@ class Game {
         if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
             this.totalPoints += pointValues[this.currWord.length]
             
+            this.foundWordsTrieRoot.addWord(this.currWord);
+            this.scoreDisplayTextBox.textContent = 'SCORE: ' + this.totalPoints;
             // TODO
-            // this.foundWordsTrieRoot.addWord(this.currWord);
-            // this.scoreDisplayTextBox.textContent = 'SCORE: ' + this.totalPoints;
+            // this.displayFoundWord(this.currWord);
+        }
+        this.currWord = "";
+        this.updateCurrWord();
+        this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
+        this.grid.querySelectorAll('.line').forEach(line => line.remove());
+    }
+    handleTouchEnd() {
+        this.isMouseDown = false;
+        this.lastActiveBox = null;
+        if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
+            this.totalPoints += pointValues[this.currWord.length]
+            
+            this.foundWordsTrieRoot.addWord(this.currWord);
+            this.scoreDisplayTextBox.textContent = 'SCORE: ' + this.totalPoints;
+            // TODO
             // this.displayFoundWord(this.currWord);
         }
         this.currWord = "";
@@ -382,6 +435,7 @@ class Game {
         const clickY = e.clientY;
         const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
         const centerThreshold = boxRect.width / 2; // What counts as "center" for input detection; tweak as needed
+        
         return distance < centerThreshold;
     }
 
@@ -421,6 +475,7 @@ class Game {
     }
     
     drawLine(box1, box2) {
+        console.log("DRAWING");
         const line = document.createElement('div');
         line.className = 'line';
         this.grid.appendChild(line);

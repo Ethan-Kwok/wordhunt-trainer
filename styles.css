@@ -153,7 +153,7 @@ button:active {
     justify-content: center;
     box-shadow: 0 6px 6px darkslategray;
     /* background-color: #f0c895; */
-    background-image: url('images/letter-tile-background-2.png');
+    background-image: url('images/letter-tile-background.png');
     background-position: center;
     background-repeat: no-repeat;
     user-select: none;
@@ -161,29 +161,32 @@ button:active {
     background-size: contain;
 }
 .box.active {
-    background-color: #eeeeee;
+    background-image: url('images/letter-tile-background-active.png');
     position: relative;
     z-index: 11;
     animation: jiggle 0.2s ease forwards;
 }
 @keyframes jiggle {
     0% {
-        transform: scale(1.09);
+        transform: scale(0.95);
     }
     60% {
-        transform: scale(1.05);
+        transform: scale(1.08);
+    }
+    80% {
+        transform: scale(1.04);
     }
     100% {
-        transform: scale(1.07);
+        transform: scale(1.06);
     }
 }
 .use-success-color .box.active {
-    background-color: #7BF67A;
+    background-image: url('images/letter-tile-background-success.png');
     position: relative;
     z-index: 11;
 }
 .use-repeated-word-color .box.active {
-    background-color: #e8e697;
+    background-image: url('images/letter-tile-background-repeat.png');
     position: relative;
     z-index: 11;
 }
@@ -210,4 +213,23 @@ button:active {
 }
 #currWordTextBox.use-repeated-word-color {
     background-color: #e8e697;
+}
+
+/* Word Selection Line Styles */
+.line {
+    /* TODO dont make it hard coded */
+    height: 12px;
+    background-color: red;
+    transform-origin: 0 0;
+    position: absolute;
+    z-index: 15;
+    opacity: .5;
+    border-radius: 10px;
+}
+
+.use-success-color .line,
+.use-repeated-word-color .line {
+    background-color: white;
+    z-index: 15;
+    opacity: .8;
 }
