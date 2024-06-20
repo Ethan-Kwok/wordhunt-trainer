@@ -5,24 +5,30 @@ body {
 
     color: #fff;
     text-align: center;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    overflow: hidden;
+    /* overflow: hidden; */
+    
+    /* background: url('images/background-wallpaper-2.jpg') no-repeat center center/216.45% fixed; */
+    background-color: gray;
 }
-
+/* 
 h1, p {
     margin: 0;
     padding: 20px;
-}
+} */
 
-.phoneScreen {    
-    background: url('images/background-wallpaper-2.jpg') no-repeat center center fixed;
-    background-size: cover;
-    height: 90vh; /* Height of the screen */
-    width: calc(100vh * 0.462); /* 828 x 1792 aspect ratio */
+#phoneScreen {    
+    background: url('images/background-wallpaper-3.jpg') no-repeat center center fixed;
+    /* background: url('images/1.png'); */
+    /* 828 x 1792 aspect ratio */
+    height: 100vh;
+    width: calc(100vh * 0.462);
+    /* height: 1792px;
+    width: 828px; */
+    background-size: contain;
     position: relative;
     
     display: flex;
@@ -32,49 +38,29 @@ h1, p {
     z-index: 1;
 }
 
-/* 
-TODO temp maybe delete this if spacing works properly    
-width: 76%;  Approximate size based on screen width; adjust as needed
-max-width: calc(76vh * 0.76);  For wide screens, make sure the box isn't too tall since it's based on screen width
-padding-bottom: min(76%, calc(76vh * 0.76));  Make it square  
-*/
-.letters-container {
-    width: 76%;
-    aspect-ratio : 1 / 1;
-    /* max-width: calc(76vh * 0.76);  */
-    /* padding-bottom: min(76%, calc(76vh * 0.76));   */
-
-    background-color: #4C5F49;
-    border: 7px solid #A4E593; /* Approximate size; adjust as needed */
-    border-radius: 5%;
+#topBar {
+    width: 100%;
     position: absolute;
-    top: 63%; /* Slightly below vertical center, adjust as needed */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    box-sizing: content-box; /* Don't include border in the size calculation */
-    z-index: -1;
-
-    box-shadow: 0 6px 6px #999999;
+    top: -4.5%; /* Align to the top of phoneScreen */
+    z-index: 1000;
     display: flex;
-    align-items: center;
     justify-content: center;
-    /* padding: 5%; */
+    align-items: center;
 }
 
-/* .button {
-    font-size: 1.2rem;
-    padding: 8px 16px;
-    margin-bottom: 10px;
-} */
+#topBarImage {
+    width: 100%;
+    height: auto;
+}
 
 button {
-    padding: 10px 20px;
-    font-size: 24px;
+    padding: 1vh 2vh;
+    font-size: 2.4vh;
     border: none;
-    border-radius: 8px;
+    border-radius: .8vh;
     cursor: pointer;
-    position: fixed;
-    bottom: 4%; /* Adjust this value to move the button higher or lower */
+    position: absolute;
+    top: 27%; /* Adjust this value to move the button higher or lower */
     left: 50%;
     transform: translateX(-50%);
 }
@@ -88,31 +74,95 @@ button:active {
 
 
 
-
-
 /* TODO CORRECT THIS */
 
+/* Score Display */
+#scoreDisplayBackground {
+    position: absolute;
+    width: 79%;
+    height: 9%;
+    margin-bottom: 137.5%;
+    z-index: 99;
+    background-color: white;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+#playerAvatar {
+    width: 20%;
+    height: auto;
+    margin-left: 6%;
+    z-index: 101;
+}
 #scoreDisplayTextBox {
     position: absolute;
-    margin-bottom: 625px;
+    width: 56%;
+    height: 8%;
+    margin-bottom: 136%;
+    margin-left: 22%;
     z-index: 100;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px 30px;
-    font-size: 30px;
-    font-weight: bold;
+    background-color: white;
+    /* border-radius: 8px; */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    /* padding: 10px 30px; */
+    padding-top: 2%;
+    padding-bottom: 2%;
     font-family: 'Arial', Gadget, sans-serif;
     color: #333;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+
+    font-size: 100%;
+}
+
+#scoreDisplayTextBox .words {
+    /* font-size: 120%; */
+    font-size: 1.8vh;
+    font-weight: bold;
+    line-height: 90%;
+}
+
+#scoreDisplayTextBox .score {
+    /* font-size: 200%; */
+    font-size: 3.2vh;
+    font-weight: bolder;
+    line-height: 90%;
 }
 
 /* Grid Styles */
+.letters-container {
+    width: 76%;
+    aspect-ratio : 1 / 1;
+    /* max-width: calc(76vh * 0.76);  */
+    /* padding-bottom: min(76%, calc(76vh * 0.76));   */
+
+    background-color: #4C5F49;
+    border: .75vh solid #A4E593; /* Approximate size; adjust as needed */
+    border-radius: 5%;
+    position: absolute;
+    top: 63%; /* Slightly below vertical center, adjust as needed */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: content-box; /* Don't include border in the size calculation */
+    z-index: -1;
+
+    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 5%; */
+}
+
 #grid {
     width: 100%;
     height: 100%;
     
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -130,15 +180,17 @@ button:active {
 
 /* Individual Box Styles */
 .box {
-    border-radius: 8px;
+    border-radius: 1vh;
     
     /* TODO set font size based on container size */
-    font-size: 50px;
+    font-size: 5.5vh;
     font-family: 'Arial', Gadget, sans-serif;
+    font-weight: bold;
+    text-shadow: white 0 .05vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 6px darkslategray;
+    box-shadow: 0 1vh .5vh rgba(0, 0, 0, .3);
     /* background-color: #f0c895; */
     background-image: url('images/letter-tile-background.png');
     background-position: center;
@@ -181,19 +233,22 @@ button:active {
 /* Current Word TextBox Styles */
 #currWordTextBox {
     /* background-color: white; */
+    position: absolute;
     font-weight: bold;
     text-align: center;
     border: none;
     font-family: 'Arial', Gadget, sans-serif;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     outline: none;
     display: inline-block;
-    font-size: 1.2rem;
-    padding: 8px 16px;
-    margin-bottom: 420px;
-    visibility: hidden;
+    font-size: 2vh;
+    padding: 1.5% 3%;
+    bottom: 58%;
     position: absolute;
+    visibility: hidden;
+    /* opacity: 1; */
+    /* transition: opacity 0.5s ease-out; */
 }
 #currWordTextBox.use-success-color {
     background-color: #7BF67A;
@@ -204,19 +259,24 @@ button:active {
 
 /* Word Selection Line Styles */
 .line {
-    /* TODO dont make it hard coded */
-    height: 12px;
-    background-color: red;
+    height: 1.5vh;
+    background-color: rgb(255, 110, 110);
     transform-origin: 0 0;
     position: absolute;
     z-index: 15;
-    opacity: .5;
+    opacity: .85;
     border-radius: 10px;
+    /* transition: opacity 0.5s ease-in-out; */
 }
 
 .use-success-color .line,
 .use-repeated-word-color .line {
     background-color: white;
     z-index: 15;
-    opacity: .8;
+    /* opacity: .5; */
+    /* transition: opacity 0.5s ease-in-out; */
+}
+
+.fade-out {
+    opacity: 0;
 }

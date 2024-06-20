@@ -230,6 +230,8 @@ class TrieNode {
 }
 
 class Game {
+    static CURR_WORD_FADEOUT_TIME = 0.25;
+
     constructor(gridId) {
         this.grid = document.getElementById(gridId);
         this.gridSize = 4; // Default = 4x4
@@ -254,7 +256,7 @@ class Game {
             this.grid.style.gap = '3.2%';
 
             // TODO
-            this.currWordTextBox.style.marginBottom = (this.gridSize * 75 + 120) + 'px';
+            // this.currWordTextBox.style.marginBottom = (this.gridSize * 75 + 120) + 'px';
         }
     }
 
@@ -263,6 +265,8 @@ class Game {
         this.totalPoints = 0;
         this.scoreDisplayTextBox.textContent = 'SCORE: 0';
         this.foundWordsTrieRoot = null;
+        this.numWordsFound = 0;
+        this.updateScoreDisplay();
         this.toggleLineColor('fail');
         this.currWord = "";
         this.lastActiveBox = null;
@@ -389,32 +393,41 @@ class Game {
         this.lastActiveBox = null;
         if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
             this.totalPoints += pointValues[this.currWord.length]
+            this.numWordsFound += 1;
             
             this.foundWordsTrieRoot.addWord(this.currWord);
-            this.scoreDisplayTextBox.textContent = 'SCORE: ' + this.totalPoints;
+            this.updateScoreDisplay();
             // TODO
             // this.displayFoundWord(this.currWord);
         }
-        this.currWord = "";
-        this.updateCurrWord();
+        this.clearCurrWord();
         this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
-        this.grid.querySelectorAll('.line').forEach(line => line.remove());
+        this.fadeOutLines();
     }
     handleTouchEnd() {
-        this.isMouseDown = false;
-        this.lastActiveBox = null;
-        if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
-            this.totalPoints += pointValues[this.currWord.length]
-            
-            this.foundWordsTrieRoot.addWord(this.currWord);
-            this.scoreDisplayTextBox.textContent = 'SCORE: ' + this.totalPoints;
-            // TODO
-            // this.displayFoundWord(this.currWord);
-        }
-        this.currWord = "";
-        this.updateCurrWord();
-        this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
-        this.grid.querySelectorAll('.line').forEach(line => line.remove());
+        this.handleMouseUp()
+    }
+    
+    updateScoreDisplay() {
+        const formattedScore = this.totalPoints.toString().padStart(4, '0');
+        this.scoreDisplayTextBox.innerHTML = `
+            <div class="words">WORDS: ${this.numWordsFound}</div>
+            <div class="score">SCORE: ${formattedScore}</div>
+        `;
+    }
+    
+    fadeOutLines() {
+        const lines = this.grid.querySelectorAll('.line');
+        lines.forEach(line => {
+
+            line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
+        });
+        lines.forEach(line => {
+            line.classList.add('fade-out');
+            setTimeout(() => {
+                line.remove();
+            }, (1000 * Game.CURR_WORD_FADEOUT_TIME));
+        });
     }
 
     isAdjacent(box1, box2) {
@@ -494,12 +507,19 @@ class Game {
         line.style.left = `${x1}px`;
     }
 
+    clearCurrWord() {
+        this.currWordTextBox.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
+        this.currWordTextBox.classList.add('fade-out');
+        this.currWord = "";
+    }
+
     updateCurrWord() {
         this.currWordTextBox.value = this.currWord;
 
         if (this.currWord === "") {
-            // If empty, hide the textbox
-            this.currWordTextBox.style.visibility = 'hidden';
+            // If empty, fade out the textbox
+            this.currWordTextBox.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
+            this.currWordTextBox.classList.add('fade-out');
         } else {
             if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
                 let pointValue = pointValues[this.currWord.length];
@@ -507,6 +527,10 @@ class Game {
             }
 
             this.currWordTextBox.style.visibility = 'visible';
+            this.currWordTextBox.style.transition = '';
+            // this.currWordTextBox.style.opacity = 1;
+            this.currWordTextBox.classList.remove('fade-out');
+            
             // Create a temporary span element to dynamically change the size of the textbox to fit the text
             const tempSpan = document.createElement('span');
             document.body.appendChild(tempSpan);
@@ -517,8 +541,7 @@ class Game {
             const textWidth = tempSpan.offsetWidth;
             document.body.removeChild(tempSpan);
 
-            const padding = 10;
-            this.currWordTextBox.style.width = (textWidth + padding) + 'px';
+            this.currWordTextBox.style.width = textWidth + 'px';
         }
     }
     

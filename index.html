@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Image Example</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="phoneScreen">
+    <div id="phoneScreen">
 
-        <div id="scoreDisplayTextBox">Score: 0</div>
-    
+        <div id="topBar">
+            <img src="images/pigeon-game-top-bar.png" alt="Top Bar" id="topBarImage">
+        </div>
+
+        <div id="scoreDisplayBackground">
+            <img src="images/player-avatar.png" alt="Top Bar" id="playerAvatar"></div>
+        <div id="scoreDisplayTextBox"></div>
+
         <input type="text" id="currWordTextBox" readonly />
     
         <div class="letters-container">
