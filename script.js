@@ -345,12 +345,12 @@ class Game {
     // Input detection
     handleTouchStart(e) {
         const touch = e.touches[0];
-        if (touch.target.classList.contains('box') && this.isInCenter(touch, touch.target)) {
+        if (touch.target.classList.contains('box')) {
             this.isMouseDown = true;
         }
     }
     handleMouseDown(e) {
-        if (e.target.classList.contains('box') && this.isInCenter(e, e.target)) {
+        if (e.target.classList.contains('box')) {
             this.isMouseDown = true;
         }
     }
@@ -439,6 +439,7 @@ class Game {
         return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
     }
 
+    /*
     isInCenter(e, box) {
         const boxRect = box.getBoundingClientRect();
         const centerX = boxRect.left + boxRect.width / 2;
@@ -449,10 +450,10 @@ class Game {
         const centerThreshold = boxRect.width / 2; // What counts as "center" for input detection; tweak as needed
         
         return distance < centerThreshold;
-    }
+    }*/
 
     activateBox(e, box) {
-        if (!box.classList.contains('active') && this.isInCenter(e, box) && this.isAdjacent(box, this.lastActiveBox)) {
+        if (!box.classList.contains('active') && this.isAdjacent(box, this.lastActiveBox)) {
             if (this.lastActiveBox) {
                 this.drawLine(this.lastActiveBox, box);
             }

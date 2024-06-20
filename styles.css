@@ -1,3 +1,10 @@
+* {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -9,7 +16,7 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    /* overflow: hidden; */
+    overflow: hidden;
     
     /* background: url('images/background-wallpaper-2.jpg') no-repeat center center/216.45% fixed; */
     background-color: gray;
@@ -41,7 +48,7 @@ h1, p {
 #topBar {
     width: 100%;
     position: absolute;
-    top: -4.5%; /* Align to the top of phoneScreen */
+    top: -11%; /* Align to the top of phoneScreen */
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -60,12 +67,12 @@ button {
     border-radius: .8vh;
     cursor: pointer;
     position: absolute;
-    top: 27%; /* Adjust this value to move the button higher or lower */
+    top: 20%; /* Adjust this value to move the button higher or lower */
     left: 50%;
     transform: translateX(-50%);
 }
 
-button:hover,
+/* button:hover, */
 button:active {
     background-color: #82C09A;
 }
@@ -81,7 +88,7 @@ button:active {
     position: absolute;
     width: 79%;
     height: 9%;
-    margin-bottom: 137.5%;
+    margin-bottom: 165%;
     z-index: 99;
     background-color: white;
     padding-top: 2%;
@@ -101,7 +108,7 @@ button:active {
     position: absolute;
     width: 56%;
     height: 8%;
-    margin-bottom: 136%;
+    margin-bottom: 164%;
     margin-left: 22%;
     z-index: 100;
     background-color: white;
@@ -122,14 +129,14 @@ button:active {
 
 #scoreDisplayTextBox .words {
     /* font-size: 120%; */
-    font-size: 1.8vh;
+    font-size: 2vh;
     font-weight: bold;
     line-height: 90%;
 }
 
 #scoreDisplayTextBox .score {
     /* font-size: 200%; */
-    font-size: 3.2vh;
+    font-size: 3.3vh;
     font-weight: bolder;
     line-height: 90%;
 }
@@ -181,8 +188,6 @@ button:active {
 /* Individual Box Styles */
 .box {
     border-radius: 1vh;
-    
-    /* TODO set font size based on container size */
     font-size: 5.5vh;
     font-family: 'Arial', Gadget, sans-serif;
     font-weight: bold;
@@ -191,7 +196,6 @@ button:active {
     align-items: center;
     justify-content: center;
     box-shadow: 0 1vh .5vh rgba(0, 0, 0, .3);
-    /* background-color: #f0c895; */
     background-image: url('images/letter-tile-background.png');
     background-position: center;
     background-repeat: no-repeat;
