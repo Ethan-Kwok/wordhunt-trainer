@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body>
-    <div id="phoneScreen">
+<body class="preload">
+    <div id="phoneScreen" class="">
 
         <div id="topBar">
             <img src="images/pigeon-game-top-bar.png" alt="Top Bar" id="topBarImage">
@@ -24,8 +25,22 @@
     
         <!-- TODO make the text change between "Start" and "Restart"
             or maybe "New Board" ? -->
-       <button type="button" id="startButton" class="button">Start/Restart</button>
-       
+        <button type="button" id="startButton" class="startButton">Start/Restart</button>
+        
+        <!-- Wordlist panel popout -->
+        <button class="word-panel-toggle" type="button">
+            <span class="material-icons word-panel-icon-open">keyboard_double_arrow_left</span>
+            <span class="material-icons word-panel-icon-close">keyboard_double_arrow_right</span>
+        </button>
+
+        <class class="word-panel">
+            <div type="text" id="pointTotalText"></div>
+            <button type="button" id="revealAllWordsButton" class="button">Reveal All</button>
+            <div id="combinedWordList" class="list-box">
+                <div id="wordList" class="word-column"></div>
+                <div id="pointList" class="word-column"></div>
+            </div>
+        </class>
     </div>
 
     <script src="script.js"></script>

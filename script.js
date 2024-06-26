@@ -143,8 +143,7 @@ class BoardGenerator {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
-
-    
+  
     static findWordsOnBoard(board) {
         const visited = board.map(row => row.map(() => false));
         const result = new Set();
@@ -287,8 +286,8 @@ class Game {
 
         // TODO
         // this.numLettersRevealed = 0;
-        // this.generateBlankWordList(this.possibleWords);
-        // this.generatePointList(this.possibleWords);
+        this.generateBlankWordList(this.possibleWords);
+        this.generatePointList(this.possibleWords);
         // this.displayTotalPossiblePoints(this.pointTotal);
         
         this.foundWordsTrieRoot = new TrieNode();
@@ -345,12 +344,12 @@ class Game {
     // Input detection
     handleTouchStart(e) {
         const touch = e.touches[0];
-        if (touch.target.classList.contains('box')) {
+        if (touch.target.classList.contains('box') && this.isInCenter(e, e.target)) {
             this.isMouseDown = true;
         }
     }
     handleMouseDown(e) {
-        if (e.target.classList.contains('box')) {
+        if (e.target.classList.contains('box') && this.isInCenter(e, e.target)) {
             this.isMouseDown = true;
         }
     }
@@ -439,7 +438,6 @@ class Game {
         return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
     }
 
-    /*
     isInCenter(e, box) {
         const boxRect = box.getBoundingClientRect();
         const centerX = boxRect.left + boxRect.width / 2;
@@ -447,13 +445,13 @@ class Game {
         const clickX = e.clientX;
         const clickY = e.clientY;
         const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
-        const centerThreshold = boxRect.width / 2; // What counts as "center" for input detection; tweak as needed
+        const centerThreshold = boxRect.width / 1.25; // What counts as "center" for input detection; tweak as needed
         
         return distance < centerThreshold;
-    }*/
+    }
 
     activateBox(e, box) {
-        if (!box.classList.contains('active') && this.isAdjacent(box, this.lastActiveBox)) {
+        if (!box.classList.contains('active') && this.isInCenter(e, box) && this.isAdjacent(box, this.lastActiveBox)) {
             if (this.lastActiveBox) {
                 this.drawLine(this.lastActiveBox, box);
             }
@@ -567,17 +565,8 @@ class Game {
     }
 
     revealAllWords(words = this.possibleWords) {
-        // To be consistent with colorings, this method checks if a string has an underscore (i.e. it was not completely found).
-        // It only reveals it in blue if the string does have an underscore.
-        words.forEach(word => {
-            const wordElement = this.wordElementsMap.get(word);
-            if (wordElement.textContent.includes('_')) {
-                wordElement.textContent = word;
-                const hoverColor = getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim();
-                wordElement.style.color = hoverColor;
-                this.foundWordsTrieRoot.addWord(word);
-            }
-        })
+        const covers = document.querySelectorAll('.word-element-cover');
+        covers.forEach(cover => cover.remove());
     }
 
     generateBlankWordList(words = this.possibleWords) {
@@ -587,9 +576,15 @@ class Game {
 
         words.forEach(word => {
             const wordElement = document.createElement('div');
-            wordElement.textContent = Array.from(word, () => '_').join('');
-            wordElement.className = 'blank-word-element';
-            wordElement.onclick = () => this.handleWordClick(wordElement, word);
+            wordElement.textContent = word;
+            wordElement.className = 'word-element';
+            
+            const wordElementCover = document.createElement('div');
+            wordElementCover.className = 'word-element-cover';
+            wordElementCover.addEventListener('click', () => wordElementCover.remove());
+            wordElementCover.textContent = "?";
+            wordElement.appendChild(wordElementCover);
+
             this.wordElementsMap.set(word, wordElement);
             wordList.appendChild(wordElement);
         });
@@ -606,23 +601,13 @@ class Game {
         wordElement.innerHTML = `<span style="color: ${hoverColor};">${visiblePart}</span>${hiddenPart}`;
     }
 
-
-    handleWordClick(wordElement, word) {
-        let numRevealedLetters = wordElement.textContent.split('').filter(char => char !== '_').length;
-        const visiblePart = word.substring(0, numRevealedLetters + 1);
-        const hiddenPart = Array.from(word.substring(numRevealedLetters + 1), () => '_').join('');
-        const hoverColor = getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim();
-        
-        wordElement.textContent = visiblePart + hiddenPart;
-        wordElement.innerHTML = `<span style="color: ${hoverColor};">${visiblePart}</span>${hiddenPart}`;
-    }
-
     generatePointList(words = this.possibleWords) {
         this.clearPointList();
         const pointList = document.getElementById('pointList');
 
         words.forEach(word => {
             const pointElement = document.createElement('div');
+            pointElement.className = 'point-element';
             pointElement.textContent = pointValues[word.length];
             pointList.appendChild(pointElement);
         });
@@ -693,12 +678,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         game.init(); // Reinitialize the game with the current mode
     });
 
-    // TODO
-    // document.getElementById('revealAllWordsButton').addEventListener('click', function() {
-    //     game.revealAllWords(game.possibleWords);
-    // });
+    document.getElementById('revealAllWordsButton').addEventListener('click', function() {
+        game.revealAllWords(game.possibleWords);
+    });
 
-    // TODO
+    // TODO wait actually maybe not
     // const toggleWordListButton = document.getElementById('toggleWordListButton');
     // const combinedWordList = document.getElementById('combinedWordList');
     // const maxHeight = document.querySelector('.list-box').offsetHeight + 'px';
@@ -720,3 +704,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // });
 });
 
+setTimeout(function(){
+    document.body.className="";
+}, 300);
+
+document.querySelector(".word-panel-toggle").addEventListener("click", () => {
+    document.querySelector("#phoneScreen").classList.toggle("word-panel-opened");
+  });
+  
