@@ -241,6 +241,7 @@ body.preload *{
     align-items: center;
 
     z-index: 1;
+    touch-action: none;
 }
 
 #topBar {
@@ -368,8 +369,6 @@ button:active {
     align-items: center;
     justify-content: center;
     /* padding: 5%; */
-
-    touch-action: none;
 }
 
 #grid {
