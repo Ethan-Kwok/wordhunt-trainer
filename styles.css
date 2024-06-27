@@ -209,6 +209,7 @@ body.preload *{
     border-radius: .8vh;
     cursor: pointer;
     background-color: white;
+    color: black;
     box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
     margin-bottom: 4vh;
     padding: 2vh 6vh 2vh;
@@ -269,6 +270,7 @@ body.preload *{
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
+    color: black;
     box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
 }
 
@@ -366,6 +368,8 @@ button:active {
     align-items: center;
     justify-content: center;
     /* padding: 5%; */
+
+    touch-action: none;
 }
 
 #grid {
