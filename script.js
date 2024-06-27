@@ -344,7 +344,7 @@ class Game {
     // Input detection
     handleTouchStart(e) {
         const touch = e.touches[0];
-        if (touch.target.classList.contains('box') && this.isInCenter(e, e.target)) {
+        if (touch.target.classList.contains('box') && this.isInCenter(touch, touch.target)) {
             this.isMouseDown = true;
         }
     }
@@ -371,7 +371,6 @@ class Game {
                                      touch.clientX <= rect.right &&
                                      touch.clientY >= rect.top &&
                                      touch.clientY <= rect.bottom;
-    
             if (this.isMouseDown && isTouchWithinBox) {
 
                 this.activateBox(touch, box);
@@ -486,7 +485,6 @@ class Game {
     }
     
     drawLine(box1, box2) {
-        console.log("DRAWING");
         const line = document.createElement('div');
         line.className = 'line';
         this.grid.appendChild(line);
