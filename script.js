@@ -276,7 +276,7 @@ class Game {
 
         // TODO
         // const selectedMode = document.querySelector('input[name="boardRating"]:checked').value;
-        const selectedMode = "Any";
+        const selectedMode = "Amazing";
         
         const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(this.gridSize, selectedMode);
         this.boardLetters = letters;
@@ -344,12 +344,12 @@ class Game {
     // Input detection
     handleTouchStart(e) {
         const touch = e.touches[0];
-        if (touch.target.classList.contains('box') && this.isInCenter(touch, touch.target)) {
+        if (touch.target.classList.contains('box')) {
             this.isMouseDown = true;
         }
     }
     handleMouseDown(e) {
-        if (e.target.classList.contains('box') && this.isInCenter(e, e.target)) {
+        if (e.target.classList.contains('box')) {
             this.isMouseDown = true;
         }
     }
@@ -395,8 +395,7 @@ class Game {
             
             this.foundWordsTrieRoot.addWord(this.currWord);
             this.updateScoreDisplay();
-            // TODO
-            // this.displayFoundWord(this.currWord);
+            this.displayFoundWord(this.currWord);
         }
         this.clearCurrWord();
         this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
@@ -444,7 +443,7 @@ class Game {
         const clickX = e.clientX;
         const clickY = e.clientY;
         const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
-        const centerThreshold = boxRect.width / 1.25; // What counts as "center" for input detection; tweak as needed
+        const centerThreshold = boxRect.width / 1.5; // What counts as "center" for input detection; tweak as needed
         
         return distance < centerThreshold;
     }
@@ -579,7 +578,7 @@ class Game {
             
             const wordElementCover = document.createElement('div');
             wordElementCover.className = 'word-element-cover';
-            wordElementCover.addEventListener('click', () => wordElementCover.remove());
+            wordElementCover.addEventListener('click', () => this.revealWord(wordElementCover, word));
             wordElementCover.textContent = "?";
             wordElement.appendChild(wordElementCover);
 
@@ -588,15 +587,14 @@ class Game {
         });
     }
 
+    revealWord(wordElementCover, word) {
+        this.foundWordsTrieRoot.addWord(word);
+        wordElementCover.remove()
+    }
+
     displayFoundWord(word) {
         const wordElement = this.wordElementsMap.get(word);
-        let numRevealedLetters = wordElement.textContent.split('').filter(char => char !== '_').length;
-        const visiblePart = word.substring(0, numRevealedLetters);
-        const hiddenPart = word.substring(numRevealedLetters);
-        const hoverColor = getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim();
-        
-        wordElement.textContent = word;
-        wordElement.innerHTML = `<span style="color: ${hoverColor};">${visiblePart}</span>${hiddenPart}`;
+        wordElement.innerHTML = word;
     }
 
     generatePointList(words = this.possibleWords) {

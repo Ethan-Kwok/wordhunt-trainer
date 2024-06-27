@@ -30,7 +30,7 @@ body.preload *{
 
 .word-panel-toggle {
     z-index: 1000;
-    width: 5vh;
+    width: 4.5vh;
     height: 5vh;
     flex-shrink: 0;
     display: grid;
@@ -68,16 +68,16 @@ body.preload *{
     flex-direction: column;
     align-items: center;
     color: black;
-    background: lightgray;
+    background: url("images/background-wallpaper-3.jpg");
 
     overflow-x: hidden;
     animation: slide-panel-out 0.25s ease-out forwards;
 
     justify-content: center;
 
-    border-radius: 1.5vh 0 0 1.5vh;
+    border-radius: 0 0 0 2vh;
     /* TODO make this look nicer? idk i just threw it in */
-    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.35);
+    box-shadow: none;
 }
 
 .word-panel-opened .word-panel-toggle {
@@ -100,17 +100,21 @@ body.preload *{
 @keyframes slide-panel-in {
     0% {
         width: 0vh;
+        box-shadow: none;
     }
     100% {
-        width: 40vh;
+        width: 41.5vh;
+        box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
     }
 }
 @keyframes slide-panel-out {
     0% {
-        width: 40vh;
+        width: 41.5vh;
+        box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
     }
     100% {
         width: 0vh;
+        box-shadow: none;
     }
 }
 @keyframes slide-icon-in {
@@ -118,12 +122,12 @@ body.preload *{
         right: 0vh;
     }
     100% {
-        right: 40vh;
+        right: 41.5vh;
     }
 }
 @keyframes slide-icon-out {
     0% {
-        right: 40vh;
+        right: 41.5vh;
     }
     100% {
         right: 0vh;
@@ -135,8 +139,9 @@ body.preload *{
 }
 
 #combinedWordList {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    /* gap: 12vh; */
+    /* flex-direction: row; */
     background-color: #375333;
     border-radius: 2vh;
     width: 75%;
@@ -146,19 +151,22 @@ body.preload *{
 
 #wordList {
     flex: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
     text-align: left;
     margin-left: 2vh;
     margin-top: 2vh;
     margin-bottom: 2vh;
 }
 #pointList {
-    text-align: right;
     margin-right: 2vh;
     margin-top: 2vh;
     margin-bottom: 2vh;
-    display: flex;
+    grid-row-start: 1;
+    justify-self: end;
+    /* display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-end; */
 }
 
 .word-element {            
@@ -196,9 +204,9 @@ body.preload *{
     margin: .4vh;
     border-radius: .5vh;
     color: white;
-    width: max-content;
     font-size: 1.75vh;
     font-weight: bold;
+    text-align: right;
 }
 
 #revealAllWordsButton {
@@ -335,14 +343,14 @@ button:active {
 
 #scoreDisplayTextBox .words {
     /* font-size: 120%; */
-    font-size: 2vh;
+    font-size: 1.8vh;
     font-weight: bold;
     line-height: 90%;
 }
 
 #scoreDisplayTextBox .score {
     /* font-size: 200%; */
-    font-size: 3.6vh;
+    font-size: 3.2vh;
     font-weight: bolder;
     line-height: 90%;
 }
