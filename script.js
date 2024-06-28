@@ -564,6 +564,7 @@ class Game {
     revealAllWords(words = this.possibleWords) {
         const covers = document.querySelectorAll('.word-element-cover');
         covers.forEach(cover => cover.remove());
+        words.forEach(word => this.foundWordsTrieRoot.addWord(word));
     }
 
     generateBlankWordList(words = this.possibleWords) {
@@ -707,4 +708,23 @@ setTimeout(function(){
 document.querySelector(".word-panel-toggle").addEventListener("click", () => {
     document.querySelector("#phoneScreen").classList.toggle("word-panel-opened");
   });
-  
+
+document.addEventListener('DOMContentLoaded', () => {
+    const settingsButton = document.querySelector('.settings-button');
+    const settingsScreenCover = document.getElementById('settings-screen-cover');
+
+    settingsButton.addEventListener('click', () => {
+        if (settingsScreenCover.style.display === 'none' || !settingsScreenCover.style.display) {
+            settingsScreenCover.style.display = 'flex';
+        } else {
+            settingsScreenCover.style.display = 'none';
+        }
+    });
+
+    // Close the settings menu when clicking outside of it
+    settingsScreenCover.addEventListener('click', (event) => {
+        if (event.target === settingsScreenCover) {
+            settingsScreenCover.style.display = 'none';
+        }
+    });
+});
