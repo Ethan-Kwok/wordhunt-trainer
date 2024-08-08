@@ -59,7 +59,8 @@ class BoardGenerator {
         'Z': 7
     };
 
-    static generateBoardLetters(gridSize, mode) {
+    // gridQuality is the minimum number of standard deviations better than the mean that a board has to be.
+    static generateBoardLetters(gridSize, minimumGridQuality) {
         let letters = [];
         let weightedLetters = BoardGenerator.createWeightedLetterList(this.letterCounts);
         BoardGenerator.shuffleArray(weightedLetters);
@@ -67,6 +68,7 @@ class BoardGenerator {
         let boardNotGoodEnough = true;
         let possibleWords = [];
         let pointTotal = 0;
+        const lowestValueForMinimumGridQuality = document.getElementById("minimumQualitySlider").min;
 
         while (boardNotGoodEnough) {
             letters = [];
@@ -90,37 +92,14 @@ class BoardGenerator {
                 stdPointTotal = std5x5PointTotal;
                 meanPointTotal = mean5x5PointTotal;
             }
-            switch(mode) {
-                case "Average":
-                    if (pointTotal >= meanPointTotal) {
-                        boardNotGoodEnough = false;
-                    }
-                    break;
-                case "Good":
-                    if (pointTotal >= meanPointTotal + stdPointTotal) {
-                        boardNotGoodEnough = false;
-                    }
-                  break;
-                case "Great":
-                    if (pointTotal >= meanPointTotal + 2 * stdPointTotal) {
-                        boardNotGoodEnough = false;
-                    }
-                    break;
-                case "Amazing":
-                    if (pointTotal >= meanPointTotal + 3 * stdPointTotal) {
-                        boardNotGoodEnough = false;
-                    }
-                    break;
-                case "Experimental":
-                    if (pointTotal >= meanPointTotal + 6 * stdPointTotal) {
-                        boardNotGoodEnough = false;
-                    }
-                    break;
-                default:
-                    boardNotGoodEnough = false;
+            if (minimumGridQuality == lowestValueForMinimumGridQuality) {
+                boardNotGoodEnough = false;
+            }
+            if (pointTotal >= meanPointTotal + minimumGridQuality * stdPointTotal) {
+                boardNotGoodEnough = false;
             }
         }
-
+        console.log("Maximum possible points: " + pointTotal);
 
         this.sortWords(possibleWords);
         return {letters, possibleWords, pointTotal};
@@ -240,22 +219,18 @@ class Game {
         this.init();
     }
 
-    // Sets the box to 4x4 or 5x5 since css sucks
-    updateBoxSize() {
+    // Sets the box sizes, letter container size, and currWord position based on if the board is 4x4 or 5x5.
+    updateGameElementSizes() {
+        const lettersContainer = document.getElementById("letters-container");
         if (this.gridSize == 5) {
+            this.grid.classList.add("five-by-five");
+            lettersContainer.classList.add("wide");
+            this.currWordTextBox.classList.add("high");
 
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
         } else {
-            this.grid.style.gridTemplateColumns = `repeat(4, 21%)`;
-            this.grid.style.gridTemplateRows = `repeat(4, 21%)`;
-            this.grid.style.gap = '3.2%';
-
-            // TODO
-            // this.currWordTextBox.style.marginBottom = (this.gridSize * 75 + 120) + 'px';
+            this.grid.classList.remove("five-by-five");
+            lettersContainer.classList.remove("wide");
+            this.currWordTextBox.classList.remove("high")
         }
     }
 
@@ -270,15 +245,19 @@ class Game {
         this.currWord = "";
         this.lastActiveBox = null;
         this.isMouseDown = false;
-        // TODO
-        // this.gridSize = document.querySelector('input[name="boardDimension"]:checked').value;
-        this.gridSize = 4;
 
         // TODO
-        // const selectedMode = document.querySelector('input[name="boardRating"]:checked').value;
-        const selectedMode = "Amazing";
-        
-        const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(this.gridSize, selectedMode);
+        // this.gridSize = document.querySelector('input[name="boardDimension"]:checked').value;
+        if (document.getElementById("boardSizeCheckBox").checked) {
+            this.gridSize = 5;
+        } else {
+            this.gridSize = 4;
+        }
+
+        const minimumBoardQualitySlider = document.getElementById("minimumQualitySlider");
+        const boardQualitySliderScale = 0.1;
+
+        const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(this.gridSize, boardQualitySliderScale * minimumBoardQualitySlider.value);
         this.boardLetters = letters;
         this.possibleWords = possibleWords;
         this.pointTotal = pointTotal;
@@ -291,7 +270,7 @@ class Game {
         // this.displayTotalPossiblePoints(this.pointTotal);
         
         this.foundWordsTrieRoot = new TrieNode();
-        this.updateBoxSize();
+        this.updateGameElementSizes();
         this.createGrid(this.boardLetters);
         this.addEventListeners();
     }
@@ -315,6 +294,7 @@ class Game {
             }
             this.letterGrid.push(row);
         }
+
     }
 
     // Create individual letter boxes
@@ -324,6 +304,11 @@ class Game {
         box.textContent = letter;
         box.dataset.row = row;
         box.dataset.column = col;
+        
+        if (this.gridSize === 5) {
+            box.classList.add("small");
+        }
+
         return box;
     }
 
@@ -621,49 +606,50 @@ class Game {
     }
 }
 
-function test(filename, filename2) {
-    let wordList = [];
-    let pointList = [];
-    let startTime = performance.now();
+// TODO idk what this was used for it's been like a month since I touched this code
+// function test(filename, filename2) {
+//     let wordList = [];
+//     let pointList = [];
+//     let startTime = performance.now();
 
-    for (let i = 0; i < 100000; i++) {
-        const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(4, "Average");
-        possibleWords.forEach(word => wordList.push(word));
-        pointList.push(pointTotal);
-        if (i % 10000 == 0) {
-            console.log("Generating Word List:", i);
-        }
-    }
-    // console.log(wordList);
-    let endTime = performance.now();
-    let timeTaken = endTime - startTime;
-    console.log(`Time taken: ${timeTaken} milliseconds`);
+//     for (let i = 0; i < 100000; i++) {
+//         const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(4, "Average");
+//         possibleWords.forEach(word => wordList.push(word));
+//         pointList.push(pointTotal);
+//         if (i % 10000 == 0) {
+//             console.log("Generating Word List:", i);
+//         }
+//     }
+//     // console.log(wordList);
+//     let endTime = performance.now();
+//     let timeTaken = endTime - startTime;
+//     console.log(`Time taken: ${timeTaken} milliseconds`);
 
-    // Convert the array of arrays into CSV string
-    let csvContent = wordList.join('\n');
+//     // Convert the array of arrays into CSV string
+//     let csvContent = wordList.join('\n');
 
-    // Create an anchor element and set attributes for download
-    let element = document.createElement('a');
-    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
-    element.setAttribute('download', filename);
+//     // Create an anchor element and set attributes for download
+//     let element = document.createElement('a');
+//     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+//     element.setAttribute('download', filename);
 
-    // Append the element to the document, trigger click for download, and remove the element
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+//     // Append the element to the document, trigger click for download, and remove the element
+//     document.body.appendChild(element);
+//     element.click();
+//     document.body.removeChild(element);
 
     
 
-    let csvContent2 = pointList.join('\n');
+//     let csvContent2 = pointList.join('\n');
 
-    let element2 = document.createElement('a');
-    element2.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent2));
-    element2.setAttribute('download', filename2);
+//     let element2 = document.createElement('a');
+//     element2.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent2));
+//     element2.setAttribute('download', filename2);
 
-    document.body.appendChild(element2);
-    element2.click();
-    document.body.removeChild(element2);
-}
+//     document.body.appendChild(element2);
+//     element2.click();
+//     document.body.removeChild(element2);
+// }
 
 document.addEventListener('DOMContentLoaded', async function() {
     await buildTrieFromStaticFile();
