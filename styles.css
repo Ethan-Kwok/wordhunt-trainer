@@ -285,7 +285,7 @@ body.preload *{
     transform: translateX(-50%);
     background-color: white;
     color: black;
-    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 /* button:hover, */
@@ -293,7 +293,68 @@ button:active {
     background-color: #82C09A;
 }
 
-
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .toggle-switch {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .toggle-switch:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .toggle-switch {
+    background-color: #80a274;
+  }
+  
+  input:focus + .toggle-switch {
+    box-shadow: 0 0 1px ;
+  }
+  
+  input:checked + .toggle-switch:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded toggle-switches */
+  .toggle-switch.round {
+    border-radius: 34px;
+  }
+  
+  .toggle-switch.round:before {
+    border-radius: 50%;
+  }
 
 
 
@@ -360,7 +421,7 @@ button:active {
 }
 
 /* Grid Styles */
-.letters-container {
+#letters-container {
     width: 76%;
     aspect-ratio : 1 / 1;
     /* max-width: calc(76vh * 0.76);  */
@@ -383,6 +444,10 @@ button:active {
     /* padding: 5%; */
 }
 
+#letters-container.wide {
+    width: 85%;
+}
+
 #grid {
     width: 100%;
     height: 100%;
@@ -403,6 +468,12 @@ button:active {
     align-content: center;
 }
 
+#grid.five-by-five {
+    grid-template-columns: repeat(5, 16.4%);
+    grid-template-rows: repeat(5, 16.4%);
+    gap: 2.6%;
+}
+
 /* Individual Box Styles */
 .box {
     border-radius: 1vh;
@@ -413,7 +484,7 @@ button:active {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1vh .5vh rgba(0, 0, 0, .3);
+    box-shadow: 0 1vh .4vh rgba(0, 0, 0, .3);
     background-image: url('images/letter-tile-background.png');
     background-position: center;
     background-repeat: no-repeat;
@@ -421,6 +492,11 @@ button:active {
     color: black;
     background-size: contain;
 }
+.box.small{
+    font-size: 5vh;
+    border-radius: 0.6vh;
+}
+
 .box.active {
     background-image: url('images/letter-tile-background-active.png');
     position: relative;
@@ -472,6 +548,9 @@ button:active {
     /* opacity: 1; */
     /* transition: opacity 0.5s ease-out; */
 }
+#currWordTextBox.high {
+    bottom: 58.5%;
+}
 #currWordTextBox.use-success-color {
     background-color: #7BF67A;
 }
@@ -521,18 +600,18 @@ button:active {
     position: absolute;
     left: 6%;
     top: 20%;
+
 }
 .settings-button:active {
     background: none;
 }
 
 #settings-button-image {
-    height: 5vh;
-    width: 5vh;
-    filter: invert(100%);
+    height: 6.5vh;
+    width: 6.5vh;
 }
 .settings-button:active #settings-button-image {
-    filter: invert(50%);
+    filter: invert(30%);
 }
 
 #settings-screen-cover {
