@@ -212,6 +212,7 @@ class Game {
 
     constructor(gridId) {
         this.grid = document.getElementById(gridId);
+        this.gridRect = grid.getBoundingClientRect();
         this.gridSize = 4; // Default = 4x4
         this.letterGrid = [];
         this.currWordTextBox = document.getElementById('currWordTextBox');
@@ -273,6 +274,20 @@ class Game {
         this.updateGameElementSizes();
         this.createGrid(this.boardLetters);
         this.addEventListeners();
+
+        this.initBoxCenters();
+    }
+
+    initBoxCenters() {
+        const boxes = document.querySelectorAll('#grid .box');
+        this.boxCenters = Array.from(boxes).map(box => {
+            const rect = box.getBoundingClientRect();
+            return {
+                box: box,
+                centerX: rect.left + rect.width / 2,
+                centerY: rect.top + rect.height / 2
+            };
+        });
     }
 
     clearGrid() {
@@ -411,26 +426,54 @@ class Game {
         `;
     }
 
-    // TODO finds the letter box closest to a given coordinate
     findClosestBox(x, y) {
-        const boxes = document.querySelectorAll('#grid .box');
         let closestBox = null;
         let closestDistance = Infinity;
     
-        boxes.forEach(box => {
-            const rect = box.getBoundingClientRect();
-            const boxCenterX = rect.left + rect.width / 2;
-            const boxCenterY = rect.top + rect.height / 2;
-            const distance = Math.hypot(boxCenterX - x, boxCenterY - y);
-    
+        this.boxCenters.forEach(({ box, centerX, centerY }) => {
+            const distance = Math.abs(centerX - x) + Math.abs(centerY - y);
+
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestBox = box;
             }
         });
-    
+
         return closestBox;
     }
+    // findClosestBox(x, y) {
+    //     // Calculate the size of each section
+    //     const boxSectionWidth = this.gridRect.width / this.gridSize;
+    //     const boxSectionHeight = this.gridRect.height / this.gridSize;
+    
+    //     // Adjust (x, y) coordinates relative to the grid's top-left corner
+    //     const relativeX = x - this.gridRect.left;
+    //     const relativeY = y - this.gridRect.top;
+
+    //     // Determine the column and row index for the given (relativeX, relativeY) coordinate
+    //     const col = Math.floor(relativeX / boxSectionWidth);
+    //     const row = Math.floor(relativeY / boxSectionHeight);
+
+    //     // Calculate the center coordinates of the section
+    //     const centerX = this.gridRect.left + (col * boxSectionWidth) + (boxSectionWidth / 2);
+    //     const centerY = this.gridRect.top + (row * boxSectionHeight) + (boxSectionHeight / 2);
+
+    //     // Use document.elementFromPoint to find the box at the center coordinates
+    //     const box = document.elementFromPoint(centerX, centerY);
+
+    //     console.log("x, y: " + Math.floor(x) + ", " + Math.floor(y));
+    //     console.log("relativex,y: " + Math.floor(relativeX) + ", " + Math.floor(relativeY))
+    //     console.log("grid dimensions: " + Math.floor(this.gridRect.left) + "; " + Math.floor(this.gridRect.right) + "; " +
+    //     Math.floor(this.gridRect.top) + "; " + Math.floor(this.gridRect.bottom)
+    //     );
+    //     // Check if the element at the center is a box and return it
+    //     if (box && box.classList.contains('box')) {
+    //         return box;
+    //     }
+
+    //     // Return null if no box is found
+    //     return null;
+    // }
     
     fadeOutLines() {
         const lines = this.grid.querySelectorAll('.line');
