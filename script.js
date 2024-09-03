@@ -369,12 +369,8 @@ class Game {
         // For some reason we can't attach the touchmove listeners to each box individually
         // because only 1 runs at a time. So we attach it to the document itself and adjust.
         boxes.forEach(box => {
-            const rect = box.getBoundingClientRect();
-            const isTouchWithinBox = touch.clientX >= rect.left &&
-                                     touch.clientX <= rect.right &&
-                                     touch.clientY >= rect.top &&
-                                     touch.clientY <= rect.bottom;
-            if (this.isMouseDown && isTouchWithinBox) {
+            if (this.isMouseDown && !box.classList.contains('active') && this.isInCenter(touch, box)
+                && this.isAdjacent(box, this.lastActiveBox)) {
                 this.activateBox(touch, box);
             }
         });
