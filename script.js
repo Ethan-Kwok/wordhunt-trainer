@@ -330,7 +330,10 @@ class Game {
     addEventListeners() {
         document.addEventListener('mousedown', (e) => this.handleMouseDown(e));
         document.addEventListener('mouseup', () => this.handleMouseUp());
-        document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+        document.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.handleTouchStart(e);
+        });
         document.addEventListener('touchend', () => this.handleTouchEnd());
         document.addEventListener('touchmove', (e) => this.handleTouchMove(e));
         document.addEventListener('touchcancel', () => this.handleTouchInterrupt());
@@ -339,8 +342,14 @@ class Game {
             // box.addEventListener('mousedown', (e) => this.handleBoxClick(e, box));
             // box.addEventListener('touchstart', (e) => this.handleBoxTouch(e, box));
         });
+        document.addEventListener('dblclick', function(e) {
+            console.log("double clicked");
+            e.preventDefault();
+        });
 
     }
+
+    // TODO disable default handling where double clicking creates the magnifying glass on iphone
 
     handleTouchInterrupt() {
         console.log("Touch Interrupted!")
