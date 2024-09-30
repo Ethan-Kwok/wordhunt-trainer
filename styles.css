@@ -415,7 +415,7 @@ button:active {
 
 #scoreDisplayTextBox .score {
     /* font-size: 200%; */
-    font-size: 3.5vh;
+    font-size: 3vh;
     font-weight: bolder;
     line-height: 90%;
 }
