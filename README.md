@@ -11,3 +11,9 @@
 ```sh
 git clone https://github.com/Ethan-Kwok/wordhunt-trainer.git
 ```
+
+# TODO
+- Add a toggleable timer
+- Finish front end for settings menu
+- Add sound effects
+- Fix bug where changing the window size will break click detection (i.e. findClosestBox breaks because box coordinates aren't updated)
