@@ -241,7 +241,7 @@ class Game {
         this.scoreDisplayTextBox.textContent = 'SCORE: 0';
         this.foundWordsTrieRoot = null;
         this.numWordsFound = 0;
-        this.updateScoreDisplay();
+        this.updateScore();
         this.toggleLineColor('fail');
         this.currWord = "";
         this.lastActiveBox = null;
@@ -256,7 +256,8 @@ class Game {
         const minimumBoardQualitySlider = document.getElementById("minimumQualitySlider");
         const boardQualitySliderScale = 0.1;
 
-        const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(this.gridSize, boardQualitySliderScale * minimumBoardQualitySlider.value);
+        const { letters, possibleWords, pointTotal } = 
+            BoardGenerator.generateBoardLetters(this.gridSize, boardQualitySliderScale * minimumBoardQualitySlider.value);
         this.boardLetters = letters;
         this.possibleWords = possibleWords;
         this.pointTotal = pointTotal;
@@ -373,11 +374,9 @@ class Game {
         this.isMouseDown = false;
         this.lastActiveBox = null;
         if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
-            this.totalPoints += pointValues[this.currWord.length]
             this.numWordsFound += 1;
-            
+            this.updateScore(pointValues[this.currWord.length]);
             this.foundWordsTrieRoot.addWord(this.currWord);
-            this.updateScoreDisplay();
             this.displayFoundWord(this.currWord);
         }
         this.clearCurrWord();
@@ -457,12 +456,41 @@ class Game {
         });
     }
 
-    updateScoreDisplay() {
-        const formattedScore = this.totalPoints.toString().padStart(4, '0');
-        this.scoreDisplayTextBox.innerHTML = `
-            <div class="words">WORDS: ${this.numWordsFound}</div>
-            <div class="score">SCORE: ${formattedScore}</div>
-        `;
+    updateScore(addedScore = 0) {
+        // Animate the score display box by incrementing the score until it reaches the new value. The amount that it
+        // increments by is given by a function of elapsed time t in seconds: f(t) = addedScore * (1 - e^(-6.32t)).
+        const growthRate = 6.32;
+        const startScore = this.totalPoints;
+        const endScore = this.totalPoints + addedScore;
+        this.totalPoints += addedScore;
+        const startTime = performance.now();
+    
+        const animateScore = (currentTime) => {
+            const elapsedTime = (currentTime - startTime) / 1000;
+            const currentDisplayedScore = Math.floor(
+                startScore + addedScore * (1 - Math.exp(-growthRate * elapsedTime))
+            );
+            
+            // The incrementation stops once the current displayed score is less than 5 under the end score.
+            if (Math.abs(endScore - currentDisplayedScore) < 5) {
+                const finalFormattedScore = endScore.toString().padStart(4, '0');
+                this.scoreDisplayTextBox.innerHTML = `
+                    <div class="words">WORDS: ${this.numWordsFound}</div>
+                    <div class="score">SCORE: ${finalFormattedScore}</div>
+                `;
+                return;
+            } else {
+                const formattedScore = currentDisplayedScore.toString().padStart(4, '0');
+                this.scoreDisplayTextBox.innerHTML = `
+                    <div class="words">WORDS: ${this.numWordsFound}</div>
+                    <div class="score">SCORE: ${formattedScore}</div>
+                `;
+            }
+    
+            requestAnimationFrame(animateScore);
+        };
+        
+        requestAnimationFrame(animateScore);
     }
 
     toggleLineColor(state) {
