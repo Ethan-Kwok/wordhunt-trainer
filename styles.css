@@ -567,6 +567,7 @@ button:active {
     z-index: 15;
     opacity: .85;
     border-radius: 10px;
+    pointer-events: none;
     /* transition: opacity 0.5s ease-in-out; */
 }
 

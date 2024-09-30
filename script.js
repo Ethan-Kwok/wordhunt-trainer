@@ -333,13 +333,19 @@ class Game {
         document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
         document.addEventListener('touchend', () => this.handleTouchEnd());
         document.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        document.addEventListener('touchcancel', () => this.handleTouchInterrupt());
         this.grid.querySelectorAll('.box').forEach(box => {
             box.addEventListener('mousemove', (e) => this.handleMouseMove(e, box));
             // box.addEventListener('mousedown', (e) => this.handleBoxClick(e, box));
             // box.addEventListener('touchstart', (e) => this.handleBoxTouch(e, box));
         });
+
     }
 
+    handleTouchInterrupt() {
+        console.log("Touch Interrupted!")
+        this.handleTouchEnd();
+    }
 
     // Input detection
     handleTouchStart(e) {
@@ -347,6 +353,7 @@ class Game {
         // if (touch.target.classList.contains('box')) {
         //     this.isMouseDown = true;
         // }
+        // this.handleTouchEnd();
         const touch = e.touches[0];
         // When touching anywhere within the grid, activate the box nearest the initial touch.
         if (document.getElementById('grid').contains(touch.target)) {
@@ -362,6 +369,7 @@ class Game {
         //     this.isMouseDown = true;
         // }
         // When touching anywhere within the grid, activate the box nearest the initial touch.
+        // this.handleMouseUp();
         if (document.getElementById('grid').contains(e.target)) {
             this.isMouseDown = true;
             const box = this.findClosestBox(e.clientX, e.clientY);
@@ -415,7 +423,19 @@ class Game {
         this.fadeOutLines();
     }
     handleTouchEnd() {
-        this.handleMouseUp()
+        this.isMouseDown = false;
+        this.lastActiveBox = null;
+        if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
+            this.totalPoints += pointValues[this.currWord.length]
+            this.numWordsFound += 1;
+            
+            this.foundWordsTrieRoot.addWord(this.currWord);
+            this.updateScoreDisplay();
+            this.displayFoundWord(this.currWord);
+        }
+        this.clearCurrWord();
+        this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
+        this.fadeOutLines();
     }
     
     updateScoreDisplay() {
@@ -478,14 +498,11 @@ class Game {
     fadeOutLines() {
         const lines = this.grid.querySelectorAll('.line');
         lines.forEach(line => {
-
             line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
-        });
-        lines.forEach(line => {
             line.classList.add('fade-out');
             setTimeout(() => {
                 line.remove();
-            }, (1000 * Game.CURR_WORD_FADEOUT_TIME));
+            }, (500 * Game.CURR_WORD_FADEOUT_TIME));
         });
     }
 
@@ -656,6 +673,10 @@ class Game {
     }
 
     displayFoundWord(word) {
+        if (!this.wordElementsMap.has(word)) {
+            console.error("ERROR: \"" + word + "\" is not a possible word!");
+            return;
+        }
         const wordElement = this.wordElementsMap.get(word);
         wordElement.innerHTML = word;
     }
