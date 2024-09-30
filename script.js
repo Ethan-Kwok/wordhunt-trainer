@@ -247,8 +247,6 @@ class Game {
         this.lastActiveBox = null;
         this.isMouseDown = false;
 
-        // TODO
-        // this.gridSize = document.querySelector('input[name="boardDimension"]:checked').value;
         if (document.getElementById("boardSizeCheckBox").checked) {
             this.gridSize = 5;
         } else {
@@ -264,11 +262,8 @@ class Game {
         this.pointTotal = pointTotal;
         this.wordElementsMap = new Map();
 
-        // TODO
-        // this.numLettersRevealed = 0;
         this.generateBlankWordList(this.possibleWords);
         this.generatePointList(this.possibleWords);
-        // this.displayTotalPossiblePoints(this.pointTotal);
         
         this.foundWordsTrieRoot = new TrieNode();
         this.updateGameElementSizes();
@@ -333,80 +328,46 @@ class Game {
         document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
         document.addEventListener('touchend', () => this.handleTouchEnd());
         document.addEventListener('touchmove', (e) => this.handleTouchMove(e));
-        document.addEventListener('touchcancel', () => this.handleTouchInterrupt());
+        document.addEventListener('touchcancel', () => this.handleTouchEnd());
         this.grid.querySelectorAll('.box').forEach(box => {
             box.addEventListener('mousemove', (e) => this.handleMouseMove(e, box));
-            // box.addEventListener('mousedown', (e) => this.handleBoxClick(e, box));
-            // box.addEventListener('touchstart', (e) => this.handleBoxTouch(e, box));
         });
     }
 
-    // TODO disable default handling where double clicking creates the magnifying glass on iphone
-
-    handleTouchInterrupt() {
-        console.log("Touch Interrupted!")
-        this.handleTouchEnd();
-    }
-
     // Input detection
-    handleTouchStart(e) {
-        // const touch = e.touches[0];
-        // if (touch.target.classList.contains('box')) {
-        //     this.isMouseDown = true;
-        // }
-        // this.handleTouchEnd();
-        const touch = e.touches[0];
-        // When touching anywhere within the grid, activate the box nearest the initial touch.
-        if (document.getElementById('grid').contains(touch.target)) {
-            this.isMouseDown = true;
-            const box = this.findClosestBox(touch.clientX, touch.clientY);
-            if (box && !box.classList.contains('active')) {
-                this.activateBox(e, box);
-            }
-        }
-    }
     handleMouseDown(e) {
-        // if (e.target.classList.contains('box')) {
-        //     this.isMouseDown = true;
-        // }
         // When touching anywhere within the grid, activate the box nearest the initial touch.
-        // this.handleMouseUp();
         if (document.getElementById('grid').contains(e.target)) {
             this.isMouseDown = true;
             const box = this.findClosestBox(e.clientX, e.clientY);
             if (box && !box.classList.contains('active')) {
-                this.activateBox(e, box);
+                this.activateBox(box);
             }
         }
+    }
+    handleTouchStart(e) {
+        const touch = e.touches[0];
+        this.handleMouseDown(touch);
     }
 
     handleMouseMove(e, box) {
         if (this.isMouseDown && !box.classList.contains('active') && this.isInCenter(e, box)
             && this.isAdjacent(box, this.lastActiveBox)) {
-            this.activateBox(e, box);
+            this.activateBox(box);
         }
     }
     handleTouchMove(e) {
         const touch = e.touches[0];
         const boxes = this.grid.querySelectorAll('.box');
-        
         // For some reason we can't attach the touchmove listeners to each box individually
         // because only 1 runs at a time. So we attach it to the document itself and adjust.
         boxes.forEach(box => {
             if (this.isMouseDown && !box.classList.contains('active') && this.isInCenter(touch, box)
                 && this.isAdjacent(box, this.lastActiveBox)) {
-                this.activateBox(touch, box);
+                this.activateBox(box);
             }
         });
     }
-
-    // handleBoxClick(e, box) {
-    //     this.activateBox(e, box);
-    // }
-    // handleBoxTouch(e, box) {
-    //     const touch = e.touches[0];
-    //     this.activateBox(touch, box);
-    // }
 
     handleMouseUp() {
         this.isMouseDown = false;
@@ -424,27 +385,7 @@ class Game {
         this.fadeOutLines();
     }
     handleTouchEnd() {
-        this.isMouseDown = false;
-        this.lastActiveBox = null;
-        if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
-            this.totalPoints += pointValues[this.currWord.length]
-            this.numWordsFound += 1;
-            
-            this.foundWordsTrieRoot.addWord(this.currWord);
-            this.updateScoreDisplay();
-            this.displayFoundWord(this.currWord);
-        }
-        this.clearCurrWord();
-        this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
-        this.fadeOutLines();
-    }
-    
-    updateScoreDisplay() {
-        const formattedScore = this.totalPoints.toString().padStart(4, '0');
-        this.scoreDisplayTextBox.innerHTML = `
-            <div class="words">WORDS: ${this.numWordsFound}</div>
-            <div class="score">SCORE: ${formattedScore}</div>
-        `;
+        this.handleMouseUp();
     }
 
     findClosestBox(x, y) {
@@ -461,50 +402,6 @@ class Game {
         });
 
         return closestBox;
-    }
-    // findClosestBox(x, y) {
-    //     // Calculate the size of each section
-    //     const boxSectionWidth = this.gridRect.width / this.gridSize;
-    //     const boxSectionHeight = this.gridRect.height / this.gridSize;
-    
-    //     // Adjust (x, y) coordinates relative to the grid's top-left corner
-    //     const relativeX = x - this.gridRect.left;
-    //     const relativeY = y - this.gridRect.top;
-
-    //     // Determine the column and row index for the given (relativeX, relativeY) coordinate
-    //     const col = Math.floor(relativeX / boxSectionWidth);
-    //     const row = Math.floor(relativeY / boxSectionHeight);
-
-    //     // Calculate the center coordinates of the section
-    //     const centerX = this.gridRect.left + (col * boxSectionWidth) + (boxSectionWidth / 2);
-    //     const centerY = this.gridRect.top + (row * boxSectionHeight) + (boxSectionHeight / 2);
-
-    //     // Use document.elementFromPoint to find the box at the center coordinates
-    //     const box = document.elementFromPoint(centerX, centerY);
-
-    //     console.log("x, y: " + Math.floor(x) + ", " + Math.floor(y));
-    //     console.log("relativex,y: " + Math.floor(relativeX) + ", " + Math.floor(relativeY))
-    //     console.log("grid dimensions: " + Math.floor(this.gridRect.left) + "; " + Math.floor(this.gridRect.right) + "; " +
-    //     Math.floor(this.gridRect.top) + "; " + Math.floor(this.gridRect.bottom)
-    //     );
-    //     // Check if the element at the center is a box and return it
-    //     if (box && box.classList.contains('box')) {
-    //         return box;
-    //     }
-
-    //     // Return null if no box is found
-    //     return null;
-    // }
-    
-    fadeOutLines() {
-        const lines = this.grid.querySelectorAll('.line');
-        lines.forEach(line => {
-            line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
-            line.classList.add('fade-out');
-            setTimeout(() => {
-                line.remove();
-            }, (500 * Game.CURR_WORD_FADEOUT_TIME));
-        });
     }
 
     isAdjacent(box1, box2) {
@@ -528,27 +425,44 @@ class Game {
         return distance < centerThreshold;
     }
 
-    activateBox(e, box) {
-        // if (!box.classList.contains('active') && this.isInCenter(e, box) && this.isAdjacent(box, this.lastActiveBox)) {
-            if (this.lastActiveBox) {
-                this.drawLine(this.lastActiveBox, box);
-            }
-            box.classList.add('active');
-            this.currWord += box.textContent;
-            this.updateCurrWord();
-            if (this.isWord(this.currWord, trieRoot)) {
-                if (this.isWord(this.currWord, this.foundWordsTrieRoot)) {
-                    this.toggleLineColor('repeated');
-                }
-                else {
-                    this.toggleLineColor('success');
-                }
+    activateBox(box) {
+        if (this.lastActiveBox) {
+            this.drawLine(this.lastActiveBox, box);
+        }
+        box.classList.add('active');
+        this.currWord += box.textContent;
+        this.updateCurrWord();
+        if (this.isWord(this.currWord, trieRoot)) {
+            if (this.isWord(this.currWord, this.foundWordsTrieRoot)) {
+                this.toggleLineColor('repeated');
             }
             else {
-                this.toggleLineColor('fail');
+                this.toggleLineColor('success');
             }
-            this.lastActiveBox = box;
-        // }
+        }
+        else {
+            this.toggleLineColor('fail');
+        }
+        this.lastActiveBox = box;
+    }
+
+    fadeOutLines() {
+        const lines = this.grid.querySelectorAll('.line');
+        lines.forEach(line => {
+            line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
+            line.classList.add('fade-out');
+            setTimeout(() => {
+                line.remove();
+            }, (500 * Game.CURR_WORD_FADEOUT_TIME));
+        });
+    }
+
+    updateScoreDisplay() {
+        const formattedScore = this.totalPoints.toString().padStart(4, '0');
+        this.scoreDisplayTextBox.innerHTML = `
+            <div class="words">WORDS: ${this.numWordsFound}</div>
+            <div class="score">SCORE: ${formattedScore}</div>
+        `;
     }
 
     toggleLineColor(state) {
@@ -562,7 +476,7 @@ class Game {
             this.currWordTextBox.classList.add('use-repeated-word-color');
         }
     }
-    
+
     drawLine(box1, box2) {
         const line = document.createElement('div');
         line.className = 'line';
@@ -705,51 +619,6 @@ class Game {
     }
 }
 
-// TODO idk what this was used for it's been like a month since I touched this code
-// function test(filename, filename2) {
-//     let wordList = [];
-//     let pointList = [];
-//     let startTime = performance.now();
-
-//     for (let i = 0; i < 100000; i++) {
-//         const { letters, possibleWords, pointTotal } = BoardGenerator.generateBoardLetters(4, "Average");
-//         possibleWords.forEach(word => wordList.push(word));
-//         pointList.push(pointTotal);
-//         if (i % 10000 == 0) {
-//             console.log("Generating Word List:", i);
-//         }
-//     }
-//     // console.log(wordList);
-//     let endTime = performance.now();
-//     let timeTaken = endTime - startTime;
-//     console.log(`Time taken: ${timeTaken} milliseconds`);
-
-//     // Convert the array of arrays into CSV string
-//     let csvContent = wordList.join('\n');
-
-//     // Create an anchor element and set attributes for download
-//     let element = document.createElement('a');
-//     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
-//     element.setAttribute('download', filename);
-
-//     // Append the element to the document, trigger click for download, and remove the element
-//     document.body.appendChild(element);
-//     element.click();
-//     document.body.removeChild(element);
-
-    
-
-//     let csvContent2 = pointList.join('\n');
-
-//     let element2 = document.createElement('a');
-//     element2.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent2));
-//     element2.setAttribute('download', filename2);
-
-//     document.body.appendChild(element2);
-//     element2.click();
-//     document.body.removeChild(element2);
-// }
-
 document.addEventListener('DOMContentLoaded', async function() {
     await buildTrieFromStaticFile();
 
@@ -763,27 +632,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('revealAllWordsButton').addEventListener('click', function() {
         game.revealAllWords(game.possibleWords);
     });
-
-    // TODO wait actually maybe not
-    // const toggleWordListButton = document.getElementById('toggleWordListButton');
-    // const combinedWordList = document.getElementById('combinedWordList');
-    // const maxHeight = document.querySelector('.list-box').offsetHeight + 'px';
-    // combinedWordList.style.height = maxHeight;
-    // toggleWordListButton.addEventListener('click', function() {
-    //     if (combinedWordList.style.height && combinedWordList.style.height !== '0px') {
-    //         combinedWordList.style.height = '0';
-    //         toggleWordListButton.textContent = 'Show Word List';
-    //     } else {
-    //         combinedWordList.style.height = maxHeight;
-    //         toggleWordListButton.textContent = 'Hide Word List';
-    //     }
-    // });
-
-
-    // TODO?
-    // document.getElementById('test').addEventListener('click', function() {
-    //     test('sampleBoardsWordList.csv', 'sampleBoardsPointTotal.csv');
-    // });
 });
 
 setTimeout(function(){
