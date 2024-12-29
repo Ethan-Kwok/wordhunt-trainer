@@ -6,8 +6,10 @@ const pointValues = [0, 0, 0, 100, 400, 800, 1400, 1800, 2200, 2600, 3000,
 
 const mean4x4PointTotal = 73000;
 const std4x4PointTotal = 50000;
+const min4x4PointTotal = 8000;
 const mean5x5PointTotal = 186000;
 const std5x5PointTotal = 107000;
+const min5x5PointTotal = 16000
 
 function buildTrieFromStaticFile() {
     // Fetch the static file
@@ -65,12 +67,10 @@ class BoardGenerator {
         let weightedLetters = BoardGenerator.createWeightedLetterList(this.letterCounts);
         BoardGenerator.shuffleArray(weightedLetters);
         
-        let boardNotGoodEnough = true;
+        let boardGoodEnough = false;
         let possibleWords = [];
         let pointTotal = 0;
-        const lowestValueForMinimumGridQuality = document.getElementById("minimumQualitySlider").min;
-
-        while (boardNotGoodEnough) {
+        while (!boardGoodEnough) {
             letters = [];
             for (let i = 0; i < gridSize * gridSize; i++) {
                 letters.push(weightedLetters[Math.floor(Math.random() * weightedLetters.length)]);
@@ -84,19 +84,20 @@ class BoardGenerator {
             
             let stdPointTotal = 0;
             let meanPointTotal = 0;
+            let minPointTotal = 0;
             if (gridSize == 4) {
                 stdPointTotal = std4x4PointTotal;
                 meanPointTotal = mean4x4PointTotal;
+                minPointTotal = min4x4PointTotal;
             }
             else if (gridSize == 5) {
                 stdPointTotal = std5x5PointTotal;
                 meanPointTotal = mean5x5PointTotal;
+                minPointTotal = min5x5PointTotal;
             }
-            if (minimumGridQuality == lowestValueForMinimumGridQuality) {
-                boardNotGoodEnough = false;
-            }
-            if (pointTotal >= meanPointTotal + minimumGridQuality * stdPointTotal) {
-                boardNotGoodEnough = false;
+            if (pointTotal >= meanPointTotal + minimumGridQuality * stdPointTotal &&
+                    pointTotal >= minPointTotal) {
+                boardGoodEnough = true;
             }
         }
         console.log("Maximum possible points: " + pointTotal);
@@ -217,6 +218,9 @@ class Game {
         this.letterGrid = [];
         this.currWordTextBox = document.getElementById('currWordTextBox');
         this.scoreDisplayTextBox = document.getElementById('scoreDisplayTextBox');
+        this.timerTextBox = document.getElementById('timer');
+        this.gridCover = document.getElementById('gridCover');
+        this.initialCountdownTime = 80;
         this.init();
     }
 
@@ -246,6 +250,7 @@ class Game {
         this.currWord = "";
         this.lastActiveBox = null;
         this.isMouseDown = false;
+        this.gridCover.style.display = 'none';
 
         if (document.getElementById("boardSizeCheckBox").checked) {
             this.gridSize = 5;
@@ -270,6 +275,15 @@ class Game {
         this.updateGameElementSizes();
         this.createGrid(this.boardLetters);
         this.addEventListeners();
+
+        if (document.getElementById("timerCheckBox").checked) {
+                this.timerEnabled = true;
+                this.timerTextBox.style.display = "flex";
+                this.startTimer(this.initialCountdownTime);
+        } else {
+                this.timerEnabled = false;
+                this.timerTextBox.style.display = "none";
+        }
 
         this.initBoxCenters();
     }
@@ -448,11 +462,11 @@ class Game {
     fadeOutLines() {
         const lines = this.grid.querySelectorAll('.line');
         lines.forEach(line => {
-            line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
+            line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`; //TODO
             line.classList.add('fade-out');
             setTimeout(() => {
                 line.remove();
-            }, (500 * Game.CURR_WORD_FADEOUT_TIME));
+            }, (1000 * Game.CURR_WORD_FADEOUT_TIME));
         });
     }
 
@@ -529,6 +543,9 @@ class Game {
         this.currWordTextBox.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
         this.currWordTextBox.classList.add('fade-out');
         this.currWord = "";
+        setTimeout(() => {
+            document.body.className="";
+        }, 1000 * Game.CURR_WORD_FADEOUT_TIME);
     }
 
     updateCurrWord() {
@@ -538,6 +555,9 @@ class Game {
             // If empty, fade out the textbox
             this.currWordTextBox.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`;
             this.currWordTextBox.classList.add('fade-out');
+            setTimeout(() => {
+                document.body.className="";
+            }, 1000 * Game.CURR_WORD_FADEOUT_TIME);
         } else {
             if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
                 let pointValue = pointValues[this.currWord.length];
@@ -645,47 +665,122 @@ class Game {
         const pointList = document.getElementById('pointList');
         pointList.innerHTML = '';
     }
+
+    startTimer(duration) {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+        this.gridCover.style.display = 'none';
+        let remainingTime = duration;
+    
+        const updateTimerDisplay = () => {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            this.timerTextBox.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
+    
+        this.timerInterval = setInterval(() => {
+            if (this.isPaused) return; // Skip updates if paused
+            if (remainingTime > 0) {
+                remainingTime--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+                this.handleMouseUp();
+                this.gridCover.style.display = 'block';
+            }
+        }, 1000);
+
+        updateTimerDisplay();
+    }
+    
+    pauseTimer() {
+        if (this.timerInterval) {
+            this.isPaused = true;
+        }
+    }
+    
+    unpauseTimer() {
+        if (this.timerInterval) {
+            this.isPaused = false;
+        }
+    }
 }
 
+
 document.addEventListener('DOMContentLoaded', async function() {
+    // Create "Game"
     await buildTrieFromStaticFile();
 
     const game = new Game('grid');
 
+    // Start button
     document.getElementById('startButton').addEventListener('click', function() {
-        console.log("Game Start");
         game.init(); // Reinitialize the game with the current mode
     });
 
+    // Word panel
+    document.querySelector(".word-panel-toggle").addEventListener("click", () => {
+        document.querySelector("#phoneScreen").classList.toggle("word-panel-opened");
+    });
+    
+    // Reveal words button
     document.getElementById('revealAllWordsButton').addEventListener('click', function() {
         game.revealAllWords(game.possibleWords);
     });
-});
 
-setTimeout(function(){
-    document.body.className="";
-}, 300);
-
-document.querySelector(".word-panel-toggle").addEventListener("click", () => {
-    document.querySelector("#phoneScreen").classList.toggle("word-panel-opened");
-  });
-
-document.addEventListener('DOMContentLoaded', () => {
+    // Settings button
     const settingsButton = document.querySelector('.settings-button');
     const settingsScreenCover = document.getElementById('settings-screen-cover');
+    const settingsCloseButton = document.getElementById('settings-close-btn');
 
     settingsButton.addEventListener('click', () => {
         if (settingsScreenCover.style.display === 'none' || !settingsScreenCover.style.display) {
             settingsScreenCover.style.display = 'flex';
-        } else {
-            settingsScreenCover.style.display = 'none';
+            game.pauseTimer();
         }
     });
 
-    // Close the settings menu when clicking outside of it
-    settingsScreenCover.addEventListener('click', (event) => {
+    settingsScreenCover.addEventListener('click', (event) => { // Close settings menu when clicking out
         if (event.target === settingsScreenCover) {
             settingsScreenCover.style.display = 'none';
+            game.unpauseTimer();
         }
     });
+
+    settingsCloseButton.addEventListener('click', () => { // Close settings menu when clicking out
+        settingsScreenCover.style.display = 'none';
+        game.unpauseTimer();
+    });
+    
+    // Slider sync
+    const slider = document.getElementById('minimumQualitySlider');
+    const sliderValue = document.getElementById('slider-value');
+
+    // Update text input when slider moves
+    slider.addEventListener('input', () => {
+        sliderValue.value = slider.value;
+    });
+
+    // Update slider when text input changes
+    sliderValue.addEventListener('input', () => {
+        const value = Math.min(Math.max(sliderValue.value, slider.min), slider.max); // Ensure within bounds
+        slider.value = value;
+        sliderValue.value = value; // Update the input in case it was out of bounds
+    });
+
+    // Restart game when menu checkboxes are clicked
+    const timerCheckBox = document.getElementById("timerCheckBox");
+    const boardSizeCheckBox = document.getElementById("boardSizeCheckBox");
+
+    timerCheckBox.addEventListener('change', function() {
+        game.init();
+    })
+
+    boardSizeCheckBox.addEventListener('change', function() {
+        game.init();
+    })
 });
+

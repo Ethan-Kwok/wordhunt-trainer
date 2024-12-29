@@ -18,14 +18,17 @@
         </div>
         <div id="scoreDisplayTextBox"></div>
 
-        <input type="text" id="currWordTextBox" readonly />
+        <div id="timer">
+            01:20
+        </div>
+
+        <input type="text" id="currWordTextBox" readonly/>
     
         <div id = "letters-container" class="wide">
             <div id="grid"></div>
-        </div> 
+            <div id="gridCover"></div>
+        </div>
     
-        <!-- TODO make the text change between "Start" and "Restart"
-            or maybe "New Board" ? -->
         <button type="button" id="startButton" class="startButton">Restart</button>
         
         <!-- Wordlist panel popout -->
@@ -49,13 +52,37 @@
 
         <div id="settings-screen-cover">
             <div id="settings-menu">
-                <div class="slideContainer">
-                    <input type="range" min="-20" max="30" value="-20" class="slider" id="minimumQualitySlider">
+                <!-- replace this with a close menu button -->
+                <img src = "images/settings-button.png" id="settings-close-btn">
+                <div class="settings-slider-container">
+                    <p class="settings-slider-label">Board Quality</p>
+                    <div class = "slider-container">
+                        <div class="slider">
+                            <input type="range" min="-20" max="30" value="-20" id="minimumQualitySlider">
+                        </div>
+                        <input type="number" min = "-20" max = "30" value = "-20" id="slider-value">
+                        <div class="slider-values">
+                            <div>NaN</div>
+                            <div>NaN</div>
+                        </div>
+                    </div>
+    
+                    <div class= "settings-toggle-switch-container">
+                        <p class = "settings-toggle-switch-label">Enable Timer</p>
+                        <label class="switch"> <!-- TODO "timer" -->
+                            <input type="checkbox" id = "timerCheckBox">
+                            <span class="toggle-switch round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class = "settings-toggle-switch-container">
+                        <p class = "settings-toggle-switch-label">5x5 Board</p>
+                        <label class="switch boardSizeButton">
+                            <input type="checkbox" id = "boardSizeCheckBox">
+                            <span class="toggle-switch round"></span>
+                        </label>
+                    </div>
                 </div>
-                <label class="switch boardSizeButton">
-                    <input type="checkbox" id = "boardSizeCheckBox">
-                    <span class="toggle-switch round"></span>
-                </label>
             </div>   
         </div>
     </div>
