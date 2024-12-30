@@ -557,14 +557,27 @@ button:active {
 /* Word Selection Line Styles */
 .line {
   height: 1.5vh;
+  /* height: 2px; */
   background-color: rgb(255, 110, 110);
   transform-origin: 0 0;
   position: absolute;
   z-index: 15;
-  border-radius: 0.7vh;
+  /* border-radius: 0.7vh; */
   pointer-events: none;
   transition: opacity 0.25s ease-out;
   /* transition: opacity 0.5s ease-in-out; */
+}
+
+.line-cap {
+  height: 1.5vh;
+  width: 1.5vh;
+  background-color: rgb(255, 110, 110);
+  /* transform-origin: 0 0; */
+  border-radius: 50%;
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
 }
 
 .use-success-color .line,

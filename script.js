@@ -326,7 +326,6 @@ class Game {
     this.initAudio();
 
     this.initLineContainer();
-    
   }
 
   initBoxCenters() {
@@ -592,15 +591,21 @@ class Game {
     this.lastActiveBox = box;
   }
 
-  fadeOutLines() {
-    const lines = this.grid.querySelectorAll(".line");
-    lines.forEach((line) => {
-      line.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`; //TODO
-      line.classList.add("fade-out");
-      setTimeout(() => {
-        line.remove();
-      }, 1000 * Game.CURR_WORD_FADEOUT_TIME);
+  async fadeOutLines() {
+    const elements = [
+      ...this.grid.querySelectorAll(".line"),
+      ...this.grid.querySelectorAll(".line-cap"),
+    ];
+
+    elements.map((element) => {
+      console.log(`Fading out element: ${element.className}`);
+      element.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`; //TODO
+      element.classList.add("fade-out");
     });
+
+    setTimeout(() => {
+      elements.map((element) => element.remove());
+    }, 1000 * Game.CURR_WORD_FADEOUT_TIME);
   }
 
   updateScore(addedScore = 0) {
@@ -660,14 +665,13 @@ class Game {
   drawLine(box1, box2) {
     const line = document.createElement("div");
     line.className = "line";
-    this.lineContainer.appendChild(line);
 
     const x1 = box1.offsetLeft + box1.offsetWidth / 2;
     const y1 = box1.offsetTop + box1.offsetHeight / 2;
     const x2 = box2.offsetLeft + box2.offsetWidth / 2;
     const y2 = box2.offsetTop + box2.offsetHeight / 2;
 
-    const length = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2) * 1.1;
+    const length = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
     const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
 
     line.style.width = `${length}px`;
@@ -675,6 +679,22 @@ class Game {
     line.style.position = "absolute";
     line.style.top = `${y1}px`;
     line.style.left = `${x1}px`;
+
+    this.lineContainer.appendChild(line);
+
+    // add line caps
+    const lineCap1 = document.createElement("div");
+    lineCap1.className = "line-cap";
+    lineCap1.style.top = `calc(${y1}px - 0.75vh)`;
+    lineCap1.style.left = `calc(${x1}px - 0.75vh)`;
+
+    const lineCap2 = document.createElement("div");
+    lineCap2.className = "line-cap";
+    lineCap2.style.top = `calc(${y2}px - 0.75vh)`;
+    lineCap2.style.left = `calc(${x2}px - 0.75vh)`;
+
+    this.lineContainer.appendChild(lineCap1);
+    this.lineContainer.appendChild(lineCap2);
   }
 
   clearCurrWord() {
