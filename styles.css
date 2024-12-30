@@ -449,7 +449,7 @@ button:active {
   margin-bottom: 140%;
   margin-left: 60%;
   z-index: 98;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 40, 0, 0.4);
   background-size: cover;
   padding-top: 4%;
   padding-bottom: 0%;
@@ -610,7 +610,7 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor:pointer;
+  cursor: pointer;
   position: absolute;
   left: 4%;
   top: 20%;
