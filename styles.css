@@ -556,7 +556,7 @@ button:active {
 
 /* Word Selection Line Styles */
 .line {
-  height: 1.5vh;
+  height: 1.6vh;
   /* height: 2px; */
   background-color: rgb(255, 110, 110);
   transform-origin: 0 0;
@@ -569,8 +569,8 @@ button:active {
 }
 
 .line-cap {
-  height: 1.5vh;
-  width: 1.5vh;
+  height: 1.6vh;
+  width: 1.6vh;
   background-color: rgb(255, 110, 110);
   /* transform-origin: 0 0; */
   border-radius: 50%;
@@ -581,7 +581,9 @@ button:active {
 }
 
 .use-success-color .line,
-.use-repeated-word-color .line {
+.use-repeated-word-color .line,
+.use-success-color .line-cap,
+.use-repeated-word-color .line-cap {
   background-color: white;
   z-index: 15;
   /* opacity: .5; */

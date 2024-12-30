@@ -685,13 +685,13 @@ class Game {
     // add line caps
     const lineCap1 = document.createElement("div");
     lineCap1.className = "line-cap";
-    lineCap1.style.top = `calc(${y1}px - 0.75vh)`;
-    lineCap1.style.left = `calc(${x1}px - 0.75vh)`;
+    lineCap1.style.top = `calc(${y1}px - 0.8vh)`;
+    lineCap1.style.left = `calc(${x1}px - 0.8vh)`;
 
     const lineCap2 = document.createElement("div");
     lineCap2.className = "line-cap";
-    lineCap2.style.top = `calc(${y2}px - 0.75vh)`;
-    lineCap2.style.left = `calc(${x2}px - 0.75vh)`;
+    lineCap2.style.top = `calc(${y2}px - 0.8vh)`;
+    lineCap2.style.left = `calc(${x2}px - 0.8vh)`;
 
     this.lineContainer.appendChild(lineCap1);
     this.lineContainer.appendChild(lineCap2);
