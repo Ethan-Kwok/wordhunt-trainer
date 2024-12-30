@@ -38,11 +38,15 @@
         </button>
 
         <class class="word-panel">
-            <div type="text" id="pointTotalText"></div>
             <button type="button" id="revealAllWordsButton" class="button">Reveal All</button>
-            <div id="combinedWordList" class="list-box">
-                <div id="wordList" class="word-column"></div>
-                <div id="pointList" class="word-column"></div>
+            <div id="combinedWordListContainer">
+                <div id="combinedWordList" class="list-box">
+                    <div id="wordList" class="word-column"></div>
+                    <div id="pointList" class="word-column"></div>
+                </div>
+                <div id="totalPossiblePointsTextBox">
+                    Total possible points: 
+                </div>
             </div>
         </class>
 
@@ -52,41 +56,62 @@
 
         <div id="settings-screen-cover">
             <div id="settings-menu">
-                <!-- replace this with a close menu button -->
-                <img src = "images/settings-button.png" id="settings-close-btn">
+                <img src="images/close-settings-button.png" id="settings-close-btn">
                 <div class="settings-slider-container">
-                    <p class="settings-slider-label">Board Quality</p>
-                    <div class = "slider-container">
-                        <div class="slider">
-                            <input type="range" min="-20" max="30" value="-20" id="minimumQualitySlider">
-                        </div>
-                        <input type="number" min = "-20" max = "30" value = "-20" id="slider-value">
-                        <div class="slider-values">
-                            <div>NaN</div>
-                            <div>NaN</div>
+                    <div class="settings-slider-label-container">
+                        <p class="settings-slider-label">Board Quality</p>
+                        <div class="board-quality-info-button">
+                            <img src="images/question-mark-icon.png" alt="Info">
                         </div>
                     </div>
+                    <div class="slider-container">
+                        <div class="slider">
+                            <input type="range" min="-15" max="35" value="-15" id="minimumQualitySlider">
+                        </div>
+                        <div id="slider-value">Any</div>
+                    </div>
     
-                    <div class= "settings-toggle-switch-container">
-                        <p class = "settings-toggle-switch-label">Enable Timer</p>
-                        <label class="switch"> <!-- TODO "timer" -->
-                            <input type="checkbox" id = "timerCheckBox">
+                    <div class="settings-toggle-switch-container">
+                        <p class="settings-toggle-switch-label">Enable Timer</p>
+                        <label class="switch">
+                            <input type="checkbox" id="timerCheckBox">
                             <span class="toggle-switch round"></span>
                         </label>
                     </div>
                     
-                    <div class = "settings-toggle-switch-container">
-                        <p class = "settings-toggle-switch-label">5x5 Board</p>
+                    <div class="settings-toggle-switch-container">
+                        <p class="settings-toggle-switch-label">5x5 Board</p>
                         <label class="switch boardSizeButton">
-                            <input type="checkbox" id = "boardSizeCheckBox">
+                            <input type="checkbox" id="boardSizeCheckBox">
+                            <span class="toggle-switch round"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-toggle-switch-container">
+                        <p class="settings-toggle-switch-label">Audio</p>
+                        <label class="switch">
+                            <input type="checkbox" id="audioCheckBox" checked>
                             <span class="toggle-switch round"></span>
                         </label>
                     </div>
                 </div>
+                <div class="board-quality-info-popup" id="board-quality-info-popup">
+                    <p class="settings-menu-text"><strong>Board quality</strong> is a measure of how "good" a board is based on the total
+                        possible amount of points from the board. Data taken from 400 real Word Hunt games.<br><br>
+                        <strong>Any</strong>: no minimum for the total possible points.<br>
+                        <strong>Average</strong>: total possible points must be at or above the mean.<br>
+                        <strong>Good</strong>: total possible points must be >1 standard deviations above the mean.<br>
+                        <strong>Great</strong>: total possible points must be >2 standard deviations above the mean.<br>
+                        <strong>Amazing</strong>: total possible points must be >3 standard deviations above the mean.<br>
+                        </p>
+                    <img src="images/close-settings-button.png" class="close-board-quality-info-button">Close</button>
+                </div>
             </div>   
         </div>
+
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

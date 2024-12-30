@@ -100,7 +100,6 @@ class BoardGenerator {
                 boardGoodEnough = true;
             }
         }
-        console.log("Maximum possible points: " + pointTotal);
 
         this.sortWords(possibleWords);
         return {letters, possibleWords, pointTotal};
@@ -218,6 +217,7 @@ class Game {
         this.letterGrid = [];
         this.currWordTextBox = document.getElementById('currWordTextBox');
         this.scoreDisplayTextBox = document.getElementById('scoreDisplayTextBox');
+        this.totalPossiblePointsTextBox = document.getElementById('totalPossiblePointsTextBox')
         this.timerTextBox = document.getElementById('timer');
         this.gridCover = document.getElementById('gridCover');
         this.initialCountdownTime = 80;
@@ -268,6 +268,8 @@ class Game {
         this.pointTotal = pointTotal;
         this.wordElementsMap = new Map();
 
+        this.totalPossiblePointsTextBox.innerHTML = `Total Possible Points: ${pointTotal}`;
+
         this.generateBlankWordList(this.possibleWords);
         this.generatePointList(this.possibleWords);
         
@@ -286,6 +288,8 @@ class Game {
         }
 
         this.initBoxCenters();
+
+        this.initAudio();
     }
 
     initBoxCenters() {
@@ -298,6 +302,71 @@ class Game {
                 centerY: rect.top + rect.height / 2
             };
         });
+    }
+
+    initAudio() {
+        this.audio_activate_nonword_box = new Howl({
+            src: ['audio/activate-nonword-box.mp3'],
+            preload: true
+        });
+        this.audio_activate_valid_word_box = new Howl({
+            src: ['audio/activate-valid-word-box.mp3'],
+            preload: true
+        });
+        this.audio_submit_nonword = new Howl({
+            src: ['audio/submit-nonword.mp3'],
+            preload: true
+        });
+        this.audio_100 = new Howl({
+            src: ['audio/100.mp3'],
+            preload: true
+        });
+        this.audio_400 = new Howl({
+            src: ['audio/400.mp3'],
+            preload: true
+        });
+        this.audio_800 = new Howl({
+            src: ['audio/800.mp3'],
+            preload: true
+        });
+        this.audio_1400 = new Howl({
+            src: ['audio/1400.mp3'],
+            preload: true
+        });
+        this.audio_1800 = new Howl({
+            src: ['audio/1800.mp3'],
+            preload: true
+        });
+        this.audio_2200 = new Howl({
+            src: ['audio/2200+.mp3'],
+            preload: true
+        });
+        this.audio_low_on_time = new Howl({
+            src:['audio/low-on-time.mp3'],
+            preload: true
+        })
+    }
+
+    playAudioForValidWord(points) {
+        switch(points) {
+            case 100:
+                this.audio_100.play();
+                break;
+            case 400:
+                this.audio_400.play();
+                break;
+            case 800:
+                this.audio_800.play();
+                break;
+            case 1400:
+                this.audio_1400.play();
+                break;
+            case 1800:
+                this.audio_1800.play();
+                break;
+            default:
+                this.audio_2200.play();       
+        }
     }
 
     clearGrid() {
@@ -389,9 +458,13 @@ class Game {
         this.lastActiveBox = null;
         if (this.isWord(this.currWord, trieRoot) && !this.isWord(this.currWord, this.foundWordsTrieRoot)) {
             this.numWordsFound += 1;
-            this.updateScore(pointValues[this.currWord.length]);
+            const pointValue = pointValues[this.currWord.length]
+            this.updateScore(pointValue);
             this.foundWordsTrieRoot.addWord(this.currWord);
             this.displayFoundWord(this.currWord);
+            this.playAudioForValidWord(pointValue);
+        } else if (this.currWord.length >= 2) {
+            this.audio_submit_nonword.play();
         }
         this.clearCurrWord();
         this.grid.querySelectorAll('.box').forEach(box => box.classList.remove('active'));
@@ -448,13 +521,16 @@ class Game {
         if (this.isWord(this.currWord, trieRoot)) {
             if (this.isWord(this.currWord, this.foundWordsTrieRoot)) {
                 this.toggleLineColor('repeated');
+                this.audio_activate_nonword_box.play();
             }
             else {
                 this.toggleLineColor('success');
+                this.audio_activate_valid_word_box.play();
             }
         }
         else {
             this.toggleLineColor('fail');
+            this.audio_activate_nonword_box.play();
         }
         this.lastActiveBox = box;
     }
@@ -598,15 +674,16 @@ class Game {
         return node.isWord;
     }
 
-    displayTotalPossiblePoints(pointTotal) {
-        const pointTotalText = document.getElementById('pointTotalText');
-        pointTotalText.textContent = 'Total Possible Points: ' + pointTotal;
-    }
-
     revealAllWords(words = this.possibleWords) {
         const covers = document.querySelectorAll('.word-element-cover');
         covers.forEach(cover => cover.remove());
-        words.forEach(word => this.foundWordsTrieRoot.addWord(word));
+        words.forEach(word => {
+            if (!this.isWord(word, this.foundWordsTrieRoot)) {
+                const wordElement = this.wordElementsMap.get(word);
+                wordElement.classList.add('revealed-word');
+            }
+            this.foundWordsTrieRoot.addWord(word);
+        });
     }
 
     generateBlankWordList(words = this.possibleWords) {
@@ -618,7 +695,6 @@ class Game {
             const wordElement = document.createElement('div');
             wordElement.textContent = word;
             wordElement.className = 'word-element';
-            
             const wordElementCover = document.createElement('div');
             wordElementCover.className = 'word-element-cover';
             wordElementCover.addEventListener('click', () => this.revealWord(wordElementCover, word));
@@ -633,6 +709,8 @@ class Game {
     revealWord(wordElementCover, word) {
         this.foundWordsTrieRoot.addWord(word);
         wordElementCover.remove()
+        const wordElement = this.wordElementsMap.get(word);
+        wordElement.classList.add('revealed-word');
     }
 
     displayFoundWord(word) {
@@ -685,6 +763,9 @@ class Game {
             if (remainingTime > 0) {
                 remainingTime--;
                 updateTimerDisplay();
+                if (remainingTime === 4) {
+                    this.audio_low_on_time.play();
+                }
             } else {
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
@@ -735,6 +816,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const settingsButton = document.querySelector('.settings-button');
     const settingsScreenCover = document.getElementById('settings-screen-cover');
     const settingsCloseButton = document.getElementById('settings-close-btn');
+    const settingsMenu = document.getElementById("settings-menu")
+    const boardQualityInfoPopup = document.getElementById('board-quality-info-popup'); // For "board quality info button"
 
     settingsButton.addEventListener('click', () => {
         if (settingsScreenCover.style.display === 'none' || !settingsScreenCover.style.display) {
@@ -745,14 +828,40 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     settingsScreenCover.addEventListener('click', (event) => { // Close settings menu when clicking out
         if (event.target === settingsScreenCover) {
-            settingsScreenCover.style.display = 'none';
-            game.unpauseTimer();
+            // If the board quality info popup is open, then clicking out will only close out of the popup, not the menu.
+            if (boardQualityInfoPopup.classList.contains('show')) {
+                boardQualityInfoPopup.classList.remove('show');
+            } else {
+                settingsScreenCover.style.display = 'none';
+                boardQualityInfoPopup.classList.remove('show');
+                game.unpauseTimer();
+            }
         }
     });
 
-    settingsCloseButton.addEventListener('click', () => { // Close settings menu when clicking out
+    settingsCloseButton.addEventListener('click', () => {
         settingsScreenCover.style.display = 'none';
+        boardQualityInfoPopup.classList.remove('show');
         game.unpauseTimer();
+    });
+
+    // Board quality info button
+    const boardQualityInfoButton = document.querySelector('.board-quality-info-button');
+    const closeBoardQualityInfoButton = document.querySelector('.close-board-quality-info-button');
+
+    settingsMenu.addEventListener('click', (event) => {
+        if (event.target === settingsMenu) {
+            boardQualityInfoPopup.classList.remove('show');
+        }
+    });
+
+
+    boardQualityInfoButton.addEventListener('click', () => {
+        boardQualityInfoPopup.classList.add('show');
+    });
+
+    closeBoardQualityInfoButton.addEventListener('click', () => {
+        boardQualityInfoPopup.classList.remove('show');
     });
     
     // Slider sync
@@ -760,27 +869,55 @@ document.addEventListener('DOMContentLoaded', async function() {
     const sliderValue = document.getElementById('slider-value');
 
     // Update text input when slider moves
-    slider.addEventListener('input', () => {
-        sliderValue.value = slider.value;
+    slider.addEventListener('input', () => {        
+        const value = parseInt(slider.value);
+        let boardQualityCategory;
+        if (value <= -5) {
+            boardQualityCategory = 'Any';
+        } else if (value <= 5) {
+            boardQualityCategory = 'Average';
+        } else if (value <= 15) {
+            boardQualityCategory = 'Good';
+        } else if (value <= 25) {
+            boardQualityCategory = 'Great';
+        } else if (value <= 35) {
+            boardQualityCategory = 'Amazing';
+        } else {
+            boardQualityCategory = 'WAYY TOO HIGH'
+        }
+        sliderValue.textContent = boardQualityCategory;
     });
 
     // Update slider when text input changes
     sliderValue.addEventListener('input', () => {
-        const value = Math.min(Math.max(sliderValue.value, slider.min), slider.max); // Ensure within bounds
-        slider.value = value;
-        sliderValue.value = value; // Update the input in case it was out of bounds
+        // const value = Math.min(Math.max(sliderValue.value, slider.min), slider.max); // Ensure within bounds
+        // slider.value = value;
+        // sliderValue.value = value; // Update the input in case it was out of bounds
+        slider.value = sliderValue.value;
+        console.log(slider.value);
     });
 
     // Restart game when menu checkboxes are clicked
     const timerCheckBox = document.getElementById("timerCheckBox");
     const boardSizeCheckBox = document.getElementById("boardSizeCheckBox");
+    const audioCheckBox = document.getElementById("audioCheckBox");
 
     timerCheckBox.addEventListener('change', function() {
         game.init();
+        game.pauseTimer();
     })
 
     boardSizeCheckBox.addEventListener('change', function() {
         game.init();
+    })
+    
+    // Audio
+    audioCheckBox.addEventListener('change', function() {
+        if (audioCheckBox.checked) {
+            Howler.mute(false);
+        } else {
+            Howler.mute(true);
+        }
     })
 });
 
