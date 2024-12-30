@@ -346,9 +346,6 @@ button:active {
     margin-bottom: 165%;
     margin-left: 23%;
     z-index: 100;
-    /* border-radius: 8px; */
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-    /* padding: 10px 30px; */
     padding-top: 2%;
     padding-bottom: 2%;
     /* font-family: 'Arial', Gadget, sans-serif; */
@@ -569,7 +566,7 @@ button:active {
     position: absolute;
     z-index: 15;
     opacity: .85;
-    border-radius: 10px;
+    border-radius: 0.7vh;
     pointer-events: none;
     transition: opacity 0.25s ease-out
     /* transition: opacity 0.5s ease-in-out; */
@@ -631,12 +628,12 @@ button:active {
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 50%;
+    height: 44%;
     background-color: #ffe6bd;
 
     border-radius: 2vh;
     box-sizing: border-box;
-    padding: 1vh 1.5vw;
+    padding: 1vh 2vh;
 }
 
 #settings-menu p {
@@ -650,8 +647,8 @@ button:active {
     align-self: end;
     height: 2vh;
     width: 2vh;
-    padding-top: 0.5vh;
-    padding-right: 0.2vh;
+    padding-top: 1vh;
+    padding-right: 0.1vh;
     padding-bottom: 0.5vh;
 }
 #settings-close-btn:active {
@@ -684,14 +681,14 @@ button:active {
     transform: translate(-50%);
 
     border-radius: 2vh;
-    padding: 1vh 1.5vw;
+    padding: 1vh 1.5vh;
 
     display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2vh 0.4vh rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
 
@@ -711,6 +708,7 @@ button:active {
     align-self: center;
     height: 2vh;
     width: 2vh;
+    padding-top: .5vh;
 }
 #close-board-quality-info-button:active {
     filter: invert(30%);
@@ -738,7 +736,7 @@ button:active {
 .slider-container {
     display: grid;
     grid-template-columns: 4fr 1fr;
-    column-gap: 2vw;
+    column-gap: 2vh;
     box-sizing: border-box;
     width: 100%;
     align-items: center;
@@ -746,7 +744,7 @@ button:active {
 
 .slider-container .slider {
     width: 100%;
-    margin: 0 4vw 0 0;
+    margin: 0 4vh 0 0;
 }
 
 #slider-value {
@@ -764,7 +762,7 @@ button:active {
     appearance: none;
     width: 100%;
     height: 0.6vh;
-    border-radius: 5px;
+    border-radius: 0.2vh;
     background: #d3d3d3;
     outline: none;
     -webkit-transition: .2s; 
@@ -826,8 +824,8 @@ button:active {
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 4.9vh;
+    height: 2.7vh;
 }
   
   /* Hide default HTML checkbox */
@@ -853,10 +851,10 @@ button:active {
 .toggle-switch:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 2.06vh;
+    width: 2.06vh;
+    left: 0.4vh;
+    bottom: 0.3vh;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -867,18 +865,18 @@ input:checked + .toggle-switch {
 }
   
 input:focus + .toggle-switch {
-    box-shadow: 0 0 1px ;
+    box-shadow: 0 0 0.2vh;
 }
   
 input:checked + .toggle-switch:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(2vh);
+    -ms-transform: translateX(2vh);
+    transform: translateX(2vh);
 }
   
 /* Rounded toggle-switches */
 .toggle-switch.round {
-    border-radius: 34px;
+    border-radius: 2vh;
 }
   
 .toggle-switch.round:before {
