@@ -1,884 +1,870 @@
 * {
-    -webkit-user-select: none; /* Safari */
-    -webkit-touch-callout: none; /* Disable the callout on long press */
-    -webkit-user-drag: none; /* Disable draggability on items */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none; /* Standard syntax */
+  -webkit-user-select: none; /* Safari */
+  -webkit-touch-callout: none; /* Disable the callout on long press */
+  -webkit-user-drag: none; /* Disable draggability on items */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    /* font-family: Arial, sans-serif; */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    overflow: hidden;
-    
-    /* background: url('images/background-wallpaper-2.jpg') no-repeat center center/216.45% fixed; */
-    background-color: gray;
+  margin: 0;
+  padding: 0;
+  /* font-family: Arial, sans-serif; */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+
+  /* background: url('images/background-wallpaper-2.jpg') no-repeat center center/216.45% fixed; */
+  background-color: gray;
 }
 
-body.preload *{
-    animation-duration: 0s !important;
-    -webkit-animation-duration: 0s !important;
-    /* transition:background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important; */
-}
-
-.word-panel-toggle {
-    z-index: 1000;
-    width: 4.5vh;
-    height: 5vh;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    position: absolute;
-    right: 0;
-    top: 20vh;
-    justify-content: center;
-    
-    border: none;
-    border-radius: 1.5vh 0 0 1.5vh;
-    color: #ffffff;
-    background: rgba(50, 50, 50, .5);
-
-    outline: none;
-    cursor: pointer;
-    
-    animation: slide-icon-out 0.25s ease-out forwards;
+body.preload * {
+  animation-duration: 0s !important;
+  -webkit-animation-duration: 0s !important;
+  /* transition:background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important; */
 }
 
 .word-panel-toggle {
-    right: 0;
+  z-index: 1000;
+  width: 4.5vh;
+  height: 5vh;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 0;
+  top: 20vh;
+  justify-content: center;
+
+  border: none;
+  border-radius: 1.5vh 0 0 1.5vh;
+  color: #ffffff;
+  background: rgba(50, 50, 50, 0.5);
+
+  outline: none;
+  cursor: pointer;
+
+  animation: slide-icon-out 0.25s ease-out forwards;
+}
+
+.word-panel-toggle {
+  right: 0;
 }
 
 .word-panel-icon-close {
-    display: none !important;
+  display: none !important;
 }
 
 .word-panel {
-    z-index: 100;
-    height: 87vh;
-    width: 0vh;
-    position: absolute;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: black;
-    background: url("images/background-wallpaper-3.jpg");
+  z-index: 100;
+  height: 87vh;
+  width: 0vh;
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+  background: url("images/background-wallpaper-3.jpg");
 
-    overflow-x: hidden;
-    animation: slide-panel-out 0.25s ease-out forwards;
+  overflow-x: hidden;
+  animation: slide-panel-out 0.25s ease-out forwards;
 
-    justify-content: center;
+  justify-content: center;
 
-    border-radius: 0 0 0 2vh;
-    /* TODO make this look nicer? idk i just threw it in */
-    box-shadow: none;
+  border-radius: 0 0 0 2vh;
+  /* TODO make this look nicer? idk i just threw it in */
+  box-shadow: none;
 }
 
 .word-panel-opened .word-panel-toggle {
-    animation: slide-icon-in 0.25s ease-out forwards;
+  animation: slide-icon-in 0.25s ease-out forwards;
 }
 
 .word-panel-opened .word-panel {
-    animation: slide-panel-in 0.25s ease-out forwards;
+  animation: slide-panel-in 0.25s ease-out forwards;
 }
 
 .word-panel-opened .word-panel-icon-open {
-    display: none !important;
-    animation: slide-icon-out 0.25s ease-out forwards;
+  display: none !important;
+  animation: slide-icon-out 0.25s ease-out forwards;
 }
 
 .word-panel-opened .word-panel-icon-close {
-    display: initial !important;
+  display: initial !important;
 }
 
 .material-icons {
-    font-size: 3vh !important;
+  font-size: 3vh !important;
 }
 
 @keyframes slide-panel-in {
-    0% {
-        width: 0vh;
-        box-shadow: none;
-    }
-    100% {
-        width: 41.5vh;
-        box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
-    }
+  0% {
+    width: 0vh;
+    box-shadow: none;
+  }
+  100% {
+    width: 41.5vh;
+    box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
+  }
 }
 @keyframes slide-panel-out {
-    0% {
-        width: 41.5vh;
-        box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
-    }
-    100% {
-        width: 0vh;
-        box-shadow: none;
-    }
+  0% {
+    width: 41.5vh;
+    box-shadow: -1vh 1vh 1vh rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    width: 0vh;
+    box-shadow: none;
+  }
 }
 @keyframes slide-icon-in {
-    0% {
-        right: 0vh;
-    }
-    100% {
-        right: 41.5vh;
-    }
+  0% {
+    right: 0vh;
+  }
+  100% {
+    right: 41.5vh;
+  }
 }
 @keyframes slide-icon-out {
-    0% {
-        right: 41.5vh;
-    }
-    100% {
-        right: 0vh;
-    }
+  0% {
+    right: 41.5vh;
+  }
+  100% {
+    right: 0vh;
+  }
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 #combinedWordListContainer {
-    display: flex;
-    flex-direction: column;
-    width: 75%;
-    height: 75%;
-    overflow-y: scroll;
-    border-radius: 2vh;
-    background-color: #375333;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  height: 75%;
+  overflow-y: scroll;
+  border-radius: 2vh;
+  background-color: #375333;
 }
 
 #combinedWordList {
-    display: grid;
+  display: grid;
 }
 
 #totalPossiblePointsTextBox {
-    padding-bottom: 3vh;
-    color: white;
-    font-size: 1.8vh;
-    font-weight: bold;
+  padding-bottom: 3vh;
+  color: white;
+  font-size: 1.8vh;
+  font-weight: bold;
 }
 
 #wordList {
-    flex: 1;
-    grid-row-start: 1;
-    grid-column-start: 1;
-    text-align: left;
-    margin-left: 2vh;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
+  flex: 1;
+  grid-row-start: 1;
+  grid-column-start: 1;
+  text-align: left;
+  margin-left: 2vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 #pointList {
-    margin-right: 2vh;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    grid-row-start: 1;
-    justify-self: end;
-    /* display: flex;
+  margin-right: 2vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  grid-row-start: 1;
+  justify-self: end;
+  /* display: flex;
     flex-direction: column;
     align-items: flex-end; */
 }
 
-.word-element {            
-    display: flex;
-    word-wrap: break-word;
-    background-image: url('images/letter-tile-background.png');
-    background-size: 120%;
-    background-position: center;
-    padding: .15vh 1vh;
-    margin: .4vh;
-    border-radius: .5vh;
-    align-items: center;
-    width: max-content;
-    font-size: 1.8vh;
-    font-weight: 700;
-    position: relative;
-    color: black;
+.word-element {
+  display: flex;
+  word-wrap: break-word;
+  background-image: url("images/letter-tile-background.png");
+  background-size: 120%;
+  background-position: center;
+  padding: 0.15vh 1vh;
+  margin: 0.4vh;
+  border-radius: 0.5vh;
+  align-items: center;
+  width: max-content;
+  font-size: 1.8vh;
+  font-weight: 700;
+  position: relative;
+  color: black;
 }
 
 .revealed-word {
-    /* color: darkgreen; */
-    opacity: 65%;
+  /* color: darkgreen; */
+  opacity: 65%;
 }
 
 .word-element-cover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background-image: url('images/letter-tile-background.png');
-    background-size: 120%;
-    background-position: center;
-    text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-image: url("images/letter-tile-background.png");
+  background-size: 120%;
+  background-position: center;
+  text-align: center;
 }
 
 .point-element {
-    background-size: 120%;
-    background-position: center;
-    padding: .15vh 1vh .15vh;
-    margin: .4vh;
-    border-radius: .5vh;
-    color: white;
-    font-size: 1.8vh;
-    font-weight: bold;
-    text-align: right;
+  background-size: 120%;
+  background-position: center;
+  padding: 0.15vh 1vh 0.15vh;
+  margin: 0.4vh;
+  border-radius: 0.5vh;
+  color: white;
+  font-size: 1.8vh;
+  font-weight: bold;
+  text-align: right;
 }
 
 #revealAllWordsButton {
-    padding: 1vh 2vh;
-    font-size: 2.4vh;
-    font-weight: bold;
-    border: none;
-    border-radius: .8vh;
-    cursor: pointer;
-    background-color: white;
-    color: black;
-    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
-    margin-bottom: 4vh;
-    padding: 2vh 6vh 2vh;
-    overflow: hidden;
-    white-space: nowrap;
+  padding: 1vh 2vh;
+  font-size: 2.4vh;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.8vh;
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
+  margin-bottom: 4vh;
+  padding: 2vh 6vh 2vh;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-
-
-
-
-
-
-
-
-#phoneScreen {    
-    background: url('images/background-wallpaper-3.jpg') no-repeat center center fixed;
-    /* background: url('images/1.png'); */
-    /* 828 x 1792 aspect ratio */
-    height: 100vh;
-    width: 46.2vh;
-    /* height: 1792px;
+#phoneScreen {
+  background: url("images/background-wallpaper-3.jpg") no-repeat center center
+    fixed;
+  /* background: url('images/1.png'); */
+  /* 828 x 1792 aspect ratio */
+  height: 100vh;
+  width: 46.2vh;
+  /* height: 1792px;
     width: 828px; */
-    background-size: contain;
-    position: relative;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-size: contain;
+  position: relative;
 
-    z-index: 1;
-    touch-action: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1;
+  touch-action: none;
 }
 
 #topBar {
-    width: 100%;
-    position: absolute;
-    top: -11%; /* Align to the top of phoneScreen */
-    z-index: 2000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  position: absolute;
+  top: -11%; /* Align to the top of phoneScreen */
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #topBarImage {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .startButton {
-    padding: 1vh 2vh;
-    font-size: 2.4vh;
-    font-weight: bold;
-    border: none;
-    border-radius: .8vh;
-    cursor: pointer;
-    position: absolute;
-    top: 20%; /* Adjust this value to move the button higher or lower */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: white;
-    color: black;
-    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
+  padding: 1vh 2vh;
+  font-size: 2.4vh;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.8vh;
+  cursor: pointer;
+  position: absolute;
+  top: 20%; /* Adjust this value to move the button higher or lower */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  color: black;
+  box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 /* button:hover, */
 button:active {
-    background-color: #82C09A;
+  background-color: #82c09a;
 }
-
-
 
 /* TODO CORRECT THIS */
 
 /* Score Display */
 #scoreDisplayBackground {
-    position: absolute;
-    width: 79%;
-    height: 9%;
-    margin-bottom: 165%;
-    z-index: 99;
-    background-image: url('images/score-background.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: left;
+  position: absolute;
+  width: 79%;
+  height: 9%;
+  margin-bottom: 165%;
+  z-index: 99;
+  background-image: url("images/score-background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
 }
 #playerAvatar {
-    width: 20%;
-    height: auto;
-    margin-left: 6%;
-    z-index: 101;
+  width: 20%;
+  height: auto;
+  margin-left: 6%;
+  z-index: 101;
 }
 #scoreDisplayTextBox {
-    position: absolute;
-    width: 59%;
-    height: 8%;
-    margin-bottom: 165%;
-    margin-left: 23%;
-    z-index: 100;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    /* font-family: 'Arial', Gadget, sans-serif; */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: left;
+  position: absolute;
+  width: 59%;
+  height: 8%;
+  margin-bottom: 165%;
+  margin-left: 23%;
+  z-index: 100;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  /* font-family: 'Arial', Gadget, sans-serif; */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
 
-    font-size: 100%;
+  font-size: 100%;
 }
 
 #scoreDisplayTextBox .words {
-    /* font-size: 120%; */
-    font-size: 1.8vh;
-    font-weight: bold;
-    line-height: 90%;
+  /* font-size: 120%; */
+  font-size: 1.8vh;
+  font-weight: bold;
+  line-height: 90%;
 }
 
 #scoreDisplayTextBox .score {
-    /* font-size: 200%; */
-    font-size: 3vh;
-    font-weight: bolder;
-    line-height: 90%;
+  /* font-size: 200%; */
+  font-size: 3vh;
+  font-weight: bolder;
+  line-height: 90%;
 }
-
-
 
 /* Grid Styles */
 #letters-container {
-    width: 76%;
-    aspect-ratio : 1 / 1;
-    /* max-width: calc(76vh * 0.76);  */
-    /* padding-bottom: min(76%, calc(76vh * 0.76));   */
+  width: 76%;
+  aspect-ratio: 1 / 1;
+  /* max-width: calc(76vh * 0.76);  */
+  /* padding-bottom: min(76%, calc(76vh * 0.76));   */
 
-    background-color: #4C5F49;
-    border: .75vh solid #A4E593; /* Approximate size; adjust as needed */
-    border-radius: 2vh;
-    position: absolute;
-    top: 60%; /* Slightly below vertical center, adjust as needed */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    box-sizing: content-box; /* Don't include border in the size calculation */
-    z-index: -1;
+  background-color: #4c5f49;
+  border: 0.75vh solid #a4e593; /* Approximate size; adjust as needed */
+  border-radius: 2vh;
+  position: absolute;
+  top: 60%; /* Slightly below vertical center, adjust as needed */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: content-box; /* Don't include border in the size calculation */
+  z-index: -1;
 
-    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* padding: 5%; */
+  box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 5%; */
 }
 
 #letters-container.wide {
-    width: 85%;
+  width: 85%;
 }
 
 #grid {
-    width: 100%;
-    height: 100%;
-    
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
 
-    display: grid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-    /* Default values. This is changed in the js script. */
-    grid-template-columns: repeat(4, 21%);
-    grid-template-rows: repeat(4, 21%);
-    gap: 3.2%;
+  display: grid;
 
-    justify-content: center;
-    align-content: center;
+  /* Default values. This is changed in the js script. */
+  grid-template-columns: repeat(4, 21%);
+  grid-template-rows: repeat(4, 21%);
+  gap: 3.2%;
+
+  justify-content: center;
+  align-content: center;
 }
 
 #grid.five-by-five {
-    grid-template-columns: repeat(5, 16.4%);
-    grid-template-rows: repeat(5, 16.4%);
-    gap: 2.6%;
+  grid-template-columns: repeat(5, 16.4%);
+  grid-template-rows: repeat(5, 16.4%);
+  gap: 2.6%;
 }
 
 #gridCover {
-    width: 100%;
-    height: 100%;
-    
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
 
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 200;
-    border-radius: 1.25vh;
-    
-    display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 200;
+  border-radius: 1.25vh;
+
+  display: none;
 }
-
-
 
 /* Timer */
 #timer {
-    display: none;
-    position: absolute;
-    width: 15%;
-    height: 3%;
-    margin-bottom: 140%;
-    margin-left: 60%;
-    z-index: 98;
-    background-color: rgba(50,100,50,0.7);
-    background-size: cover;
-    padding-top: 4%;
-    padding-bottom: 0%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 1.5vh;
-    
-    font-family: 'Arial', Gadget, sans-serif;
-    font-weight: bold;
-    font-size: 1.5vh;
+  display: none;
+  position: absolute;
+  width: 15%;
+  height: 3%;
+  margin-bottom: 140%;
+  margin-left: 60%;
+  z-index: 98;
+  background-color: rgba(50, 100, 50, 0.7);
+  background-size: cover;
+  padding-top: 4%;
+  padding-bottom: 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.5vh;
+
+  font-family: "Arial", Gadget, sans-serif;
+  font-weight: bold;
+  font-size: 1.5vh;
 }
 
 /* Individual Box Styles */
 .box {
-    border-radius: 1vh;
-    font-size: 5.5vh;
-    font-family: 'Arial', Gadget, sans-serif;
-    font-weight: bold;
-    text-shadow: white 0 .05vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 1vh .4vh rgba(0, 0, 0, .3);
-    background-image: url('images/letter-tile-background.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    user-select: none;
-    color: black;
-    background-size: contain;
+  border-radius: 1vh;
+  font-size: 5.5vh;
+  font-family: "Arial", Gadget, sans-serif;
+  font-weight: bold;
+  text-shadow: white 0 0.05vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1vh 0.4vh rgba(0, 0, 0, 0.3);
+  background-image: url("images/letter-tile-background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  user-select: none;
+  color: black;
+  background-size: contain;
 }
-.box.small{
-    font-size: 5vh;
-    border-radius: 0.6vh;
+.box.small {
+  font-size: 5vh;
+  border-radius: 0.6vh;
 }
 
 .box.active {
-    background-image: url('images/letter-tile-background-active.png');
-    position: relative;
-    z-index: 11;
-    animation: jiggle 0.2s ease forwards;
+  background-image: url("images/letter-tile-background-active.png");
+  position: relative;
+  z-index: 11;
+  animation: jiggle 0.2s ease forwards;
 }
 @keyframes jiggle {
-    0% {
-        transform: scale(0.95);
-    }
-    60% {
-        transform: scale(1.08);
-    }
-    80% {
-        transform: scale(1.04);
-    }
-    100% {
-        transform: scale(1.06);
-    }
+  0% {
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  80% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1.06);
+  }
 }
 .use-success-color .box.active {
-    background-image: url('images/letter-tile-background-success.png');
-    position: relative;
-    z-index: 11;
+  background-image: url("images/letter-tile-background-success.png");
+  position: relative;
+  z-index: 11;
 }
 .use-repeated-word-color .box.active {
-    background-image: url('images/letter-tile-background-repeat.png');
-    position: relative;
-    z-index: 11;
+  background-image: url("images/letter-tile-background-repeat.png");
+  position: relative;
+  z-index: 11;
 }
-
-
 
 /* Current Word TextBox Styles */
 #currWordTextBox {
-    /* background-color: white; */
-    position: absolute;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    font-family: 'Arial', Gadget, sans-serif;
-    border-radius: 1vh;
-    box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
-    outline: none;
-    display: inline-block;
-    font-size: 2vh;
-    padding: 1.5% 3%;
-    bottom: 61%;
-    position: absolute;
-    visibility: hidden;
-    /* opacity: 1; */
-    /* transition: opacity 0.5s ease-out; */
+  /* background-color: white; */
+  position: absolute;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  font-family: "Arial", Gadget, sans-serif;
+  border-radius: 1vh;
+  box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
+  outline: none;
+  display: inline-block;
+  font-size: 2vh;
+  padding: 1.5% 3%;
+  bottom: 61%;
+  position: absolute;
+  visibility: hidden;
+  /* opacity: 1; */
+  /* transition: opacity 0.5s ease-out; */
 }
 #currWordTextBox.high {
-    bottom: 58.5%;
+  bottom: 58.5%;
 }
 #currWordTextBox.use-success-color {
-    background-color: #7BF67A;
+  background-color: #7bf67a;
 }
 #currWordTextBox.use-repeated-word-color {
-    background-color: #e8e697;
+  background-color: #e8e697;
 }
 
+/* Line Container */
+.line-container {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 
+  z-index: 15;
+  position: absolute;
+  opacity: 0.85;
+}
 
 /* Word Selection Line Styles */
 .line {
-    height: 1.5vh;
-    background-color: rgb(255, 110, 110);
-    transform-origin: 0 0;
-    position: absolute;
-    z-index: 15;
-    opacity: .85;
-    border-radius: 0.7vh;
-    pointer-events: none;
-    transition: opacity 0.25s ease-out
-    /* transition: opacity 0.5s ease-in-out; */
+  height: 1.5vh;
+  background-color: rgb(255, 110, 110);
+  transform-origin: 0 0;
+  position: absolute;
+  z-index: 15;
+  border-radius: 0.7vh;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+  /* transition: opacity 0.5s ease-in-out; */
 }
 
 .use-success-color .line,
 .use-repeated-word-color .line {
-    background-color: white;
-    z-index: 15;
-    /* opacity: .5; */
-    /* transition: opacity 0.5s ease-in-out; */
+  background-color: white;
+  z-index: 15;
+  /* opacity: .5; */
+  /* transition: opacity 0.5s ease-in-out; */
 }
 
 .fade-out {
-    opacity: 0;
+  opacity: 0;
 }
-
-
 
 /* Settings */
 .settings-button {
-    height: 5vh;
-    width: 5vh;
-    background-color: none;
-    background: none;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    position: absolute;
-    left: 6%;
-    top: 20%;
+  height: 5vh;
+  width: 5vh;
+  background-color: none;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  position: absolute;
+  left: 6%;
+  top: 20%;
 }
 .settings-button:active {
-    background: none;
+  background: none;
 }
 
 #settings-button-image {
-    height: 6.5vh;
-    width: 6.5vh;
+  height: 6.5vh;
+  width: 6.5vh;
 }
 .settings-button:active #settings-button-image {
-    filter: invert(30%);
+  filter: invert(30%);
 }
 
 #settings-screen-cover {
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, .3);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.3);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  display: none;
 }
 
 #settings-menu {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    height: 44%;
-    background-color: #ffe6bd;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 44%;
+  background-color: #ffe6bd;
 
-    border-radius: 2vh;
-    box-sizing: border-box;
-    padding: 1vh 2vh;
+  border-radius: 2vh;
+  box-sizing: border-box;
+  padding: 1vh 2vh;
 }
 
 #settings-menu p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 2vh;
-    font-weight: bold;
-    color: black;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2vh;
+  font-weight: bold;
+  color: black;
 }
 
 #settings-close-btn {
-    align-self: end;
-    height: 2vh;
-    width: 2vh;
-    padding-top: 1vh;
-    padding-right: 0.1vh;
-    padding-bottom: 0.5vh;
+  align-self: end;
+  height: 2vh;
+  width: 2vh;
+  padding-top: 1vh;
+  padding-right: 0.1vh;
+  padding-bottom: 0.5vh;
 }
 #settings-close-btn:active {
-    filter: invert(30%);
+  filter: invert(30%);
 }
-
-
 
 /* Board Quality Info Popup */
 .board-quality-info-button {
-    padding-left: 0.5vh;
-    padding-top: 0.1vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  padding-left: 0.5vh;
+  padding-top: 0.1vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .board-quality-info-button img {
-    width: 1.75vh;
-    height: auto;
-    opacity: 50%;
+  width: 1.75vh;
+  height: auto;
+  opacity: 50%;
 }
 
 .board-quality-info-popup {
-    background-color: white;
-    position: absolute;
-    width: 69%;
-    left: 50%;
-    transform: translate(-50%);
+  background-color: white;
+  position: absolute;
+  width: 69%;
+  left: 50%;
+  transform: translate(-50%);
 
-    border-radius: 2vh;
-    padding: 1vh 1.5vh;
+  border-radius: 2vh;
+  padding: 1vh 1.5vh;
 
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    box-shadow: 0 0.2vh 0.4vh rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+  box-shadow: 0 0.2vh 0.4vh rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 
 .board-quality-info-popup.show {
-    display: flex;
+  display: flex;
 }
 
 .board-quality-info-popup p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1.5vh !important;
-    font-weight: normal !important;
-    color: black;
-    text-align: left;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5vh !important;
+  font-weight: normal !important;
+  color: black;
+  text-align: left;
 }
 
 .close-board-quality-info-button {
-    align-self: center;
-    height: 2vh;
-    width: 2vh;
-    padding-top: .5vh;
+  align-self: center;
+  height: 2vh;
+  width: 2vh;
+  padding-top: 0.5vh;
 }
 #close-board-quality-info-button:active {
-    filter: invert(30%);
+  filter: invert(30%);
 }
-
-
 
 /* Board Quality Slider */
 .settings-slider-label-container {
-    display: flex;
-    width: 100%;
-    align-items: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
 
 .settings-slider-label {
-    margin: 0.5vh 0;
+  margin: 0.5vh 0;
 }
 
 .settings-slider-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .slider-container {
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    column-gap: 2vh;
-    box-sizing: border-box;
-    width: 100%;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  column-gap: 2vh;
+  box-sizing: border-box;
+  width: 100%;
+  align-items: center;
 }
 
 .slider-container .slider {
-    width: 100%;
-    margin: 0 4vh 0 0;
+  width: 100%;
+  margin: 0 4vh 0 0;
 }
 
 #slider-value {
-    text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1.5vh;
-    color: black;
-    padding-bottom: 0.2vh;
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5vh;
+  color: black;
+  padding-bottom: 0.2vh;
 }
 
-.slider-container .slider input{
-    margin: 1vh 0;
-    
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 0.6vh;
-    border-radius: 0.2vh;
-    background: #d3d3d3;
-    outline: none;
-    -webkit-transition: .2s; 
-    transition: opacity .2s;
+.slider-container .slider input {
+  margin: 1vh 0;
+
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 0.6vh;
+  border-radius: 0.2vh;
+  background: #d3d3d3;
+  outline: none;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
 .slider-container .slider input::-moz-range-thumb:hover {
-    filter: brightness(80%);
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
+  filter: brightness(80%);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
 }
 
 .slider-container .slider input::-webkit-slider-thumb:hover {
-    filter: brightness(80%);
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
+  filter: brightness(80%);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider-container .slider input::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 2vh; /* Set a specific slider handle width */
-    height: 2vh; /* Slider handle height */
-    border-radius: 50%; 
-    background: #80a274;
-    cursor: pointer; /* Cursor on hover */
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 2vh; /* Set a specific slider handle width */
+  height: 2vh; /* Slider handle height */
+  border-radius: 50%;
+  background: #80a274;
+  cursor: pointer; /* Cursor on hover */
 }
-  
+
 .slider-container .slider input::-moz-range-thumb {
-    width: 2vh; /* Set a specific slider handle width */
-    height: 2vh; /* Slider handle height */
-    border-radius: 50%; 
-    background: #80a274; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+  width: 2vh; /* Set a specific slider handle width */
+  height: 2vh; /* Slider handle height */
+  border-radius: 50%;
+  background: #80a274; /* Green background */
+  cursor: pointer; /* Cursor on hover */
 }
-
-
 
 /* Toggle Switches (Checkboxes) */
 .settings-toggle-switch-container p {
-    margin: 1vh 0;
+  margin: 1vh 0;
 }
 
 .settings-toggle-switch-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
 
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 4.9vh;
-    height: 2.7vh;
+  position: relative;
+  display: inline-block;
+  width: 4.9vh;
+  height: 2.7vh;
 }
-  
-  /* Hide default HTML checkbox */
+
+/* Hide default HTML checkbox */
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
-  
+
 /* The slider */
 .toggle-switch {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
-  
+
 .toggle-switch:before {
-    position: absolute;
-    content: "";
-    height: 2.06vh;
-    width: 2.06vh;
-    left: 0.4vh;
-    bottom: 0.3vh;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  content: "";
+  height: 2.06vh;
+  width: 2.06vh;
+  left: 0.4vh;
+  bottom: 0.3vh;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
-  
+
 input:checked + .toggle-switch {
-    background-color: #80a274;
+  background-color: #80a274;
 }
-  
+
 input:focus + .toggle-switch {
-    box-shadow: 0 0 0.2vh;
+  box-shadow: 0 0 0.2vh;
 }
-  
+
 input:checked + .toggle-switch:before {
-    -webkit-transform: translateX(2vh);
-    -ms-transform: translateX(2vh);
-    transform: translateX(2vh);
+  -webkit-transform: translateX(2vh);
+  -ms-transform: translateX(2vh);
+  transform: translateX(2vh);
 }
-  
+
 /* Rounded toggle-switches */
 .toggle-switch.round {
-    border-radius: 2vh;
+  border-radius: 2vh;
 }
-  
+
 .toggle-switch.round:before {
-    border-radius: 50%;
+  border-radius: 50%;
 }
