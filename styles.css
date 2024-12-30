@@ -171,12 +171,10 @@ body.preload * {
   grid-row-start: 1;
   grid-column-start: 1;
   text-align: left;
-  margin-left: 2vh;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin: 2vh 1vh;
 }
 #pointList {
-  margin-right: 2vh;
+  margin-right: 1vh;
   margin-top: 2vh;
   margin-bottom: 2vh;
   grid-row-start: 1;
@@ -192,13 +190,14 @@ body.preload * {
   background-image: url("images/letter-tile-background.png");
   background-size: 120%;
   background-position: center;
-  padding: 0.15vh 1vh;
+  padding: 0.3vh 1vh;
   margin: 0.4vh;
   border-radius: 0.5vh;
   align-items: center;
   width: max-content;
   font-size: 1.8vh;
   font-weight: 700;
+  line-height: 0.95;
   position: relative;
   color: black;
 }
@@ -215,26 +214,29 @@ body.preload * {
   width: 100%;
   height: 100%;
   border-radius: inherit;
+  cursor: pointer;
   background-image: url("images/letter-tile-background.png");
   background-size: 120%;
   background-position: center;
   text-align: center;
+  line-height: 1.2;
 }
 
 .point-element {
   background-size: 120%;
   background-position: center;
-  padding: 0.15vh 1vh 0.15vh;
+  padding: 0.3vh 0vh;
   margin: 0.4vh;
   border-radius: 0.5vh;
   color: white;
   font-size: 1.8vh;
   font-weight: bold;
+  line-height: 0.95;
   text-align: right;
 }
 
 #revealAllWordsButton {
-  padding: 1vh 2vh;
+  padding: 1.4vh 5vh;
   font-size: 2.4vh;
   font-weight: bold;
   border: none;
@@ -242,9 +244,10 @@ body.preload * {
   cursor: pointer;
   background-color: white;
   color: black;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.2);
   margin-bottom: 4vh;
-  padding: 2vh 6vh 2vh;
+  /* padding: 2vh 6vh 2vh; */
   overflow: hidden;
   white-space: nowrap;
 }
@@ -288,15 +291,17 @@ body.preload * {
   padding: 1vh 2vh;
   font-size: 2.4vh;
   font-weight: bold;
+  line-height: 1;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   border: none;
   border-radius: 0.8vh;
   cursor: pointer;
   position: absolute;
   top: 20%; /* Adjust this value to move the button higher or lower */
-  left: 50%;
-  transform: translateX(-50%);
+  /* left: 50%;
+  transform: translateX(-50%); */
   background-color: white;
-  color: black;
+  color: #000;
   box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
 }
 
@@ -332,20 +337,21 @@ button:active {
 }
 #scoreDisplayTextBox {
   position: absolute;
-  width: 59%;
+  width: 57%;
   height: 8%;
   margin-bottom: 165%;
-  margin-left: 23%;
+  margin-left: 21%;
   z-index: 100;
   padding-top: 2%;
   padding-bottom: 2%;
   /* font-family: 'Arial', Gadget, sans-serif; */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  color: #000;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: left;
+  box-sizing: border-box;
 
   font-size: 100%;
 }
@@ -360,7 +366,7 @@ button:active {
 #scoreDisplayTextBox .score {
   /* font-size: 200%; */
   font-size: 3vh;
-  font-weight: bolder;
+  font-weight: bold;
   line-height: 90%;
 }
 
@@ -443,7 +449,7 @@ button:active {
   margin-bottom: 140%;
   margin-left: 60%;
   z-index: 98;
-  background-color: rgba(50, 100, 50, 0.7);
+  background-color: rgba(0, 0, 0, 0.3);
   background-size: cover;
   padding-top: 4%;
   padding-bottom: 0%;
@@ -604,9 +610,9 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  cursor:pointer;
   position: absolute;
-  left: 6%;
+  left: 4%;
   top: 20%;
 }
 .settings-button:active {
