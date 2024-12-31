@@ -458,7 +458,6 @@ class Game {
     document.addEventListener("touchcancel", () => this.handleTouchEnd());
     // Prevent magnifying glass from appearing on mobile devices
     document.body.addEventListener('touchcancel', this.ignore, { passive: false });
-    document.body.addEventListener('touchend', this.ignore, { passive: false });
 
     this.grid.querySelectorAll(".box").forEach((box) => {
       box.addEventListener("mousemove", (e) => this.handleMouseMove(e, box));
