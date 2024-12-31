@@ -456,13 +456,19 @@ class Game {
     document.addEventListener("touchend", () => this.handleTouchEnd());
     document.addEventListener("touchmove", (e) => this.handleTouchMove(e));
     document.addEventListener("touchcancel", () => this.handleTouchEnd());
+    // Prevent magnifying glass from appearing on mobile devices
+    document.body.addEventListener('touchcancel', this.ignore, { passive: false });
+    document.body.addEventListener('touchend', this.ignore, { passive: false });
+
     this.grid.querySelectorAll(".box").forEach((box) => {
       box.addEventListener("mousemove", (e) => this.handleMouseMove(e, box));
     });
     // Fixes bug where changing the window size will offset the box centers for input detection
     window.addEventListener('resize', () => this.initBoxCenters());
   }
-
+  ignore(e) {
+    e.preventDefault();
+  }
 
   // Input detection
   handleMouseDown(e) {
