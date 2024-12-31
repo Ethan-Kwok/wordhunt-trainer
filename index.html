@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="preload stylesheet" as = "style">
 </head>
 <body class="preload">
     <div id="phoneScreen" class="">
@@ -16,8 +16,11 @@
         <div id="scoreDisplayBackground">
             <img src="images/player-avatar.png" alt="Top Bar" id="playerAvatar">
         </div>
-        <div id="scoreDisplayTextBox"></div>
-
+        <div id="scoreDisplayTextBox">
+            <div id="wordsText">WORDS: 0</div>
+            <div id="scoreText">SCORE: 0000</div>
+        </div>
+            
         <div id="timer">
             01:20
         </div>
@@ -56,8 +59,10 @@
 
         <div id="settings-screen-cover">
             <div id="settings-menu">
-                <img src="images/close-settings-button.png" id="settings-close-btn">
-                <div class="settings-slider-container">
+                <!-- <img src="images/close-settings-button.png" id="settings-close-button"> -->
+                <div class = "settings-header">Settings</div>
+
+                <div class = "settings-container">
                     <div class="settings-slider-label-container">
                         <p class="settings-slider-label">Board Quality</p>
                         <div class="board-quality-info-button">
@@ -70,30 +75,35 @@
                         </div>
                         <div id="slider-value">Any</div>
                     </div>
-    
-                    <div class="settings-toggle-switch-container">
-                        <p class="settings-toggle-switch-label">Enable Timer</p>
-                        <label class="switch">
-                            <input type="checkbox" id="timerCheckBox">
-                            <span class="toggle-switch round"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="settings-toggle-switch-container">
-                        <p class="settings-toggle-switch-label">5x5 Board</p>
-                        <label class="switch boardSizeButton">
-                            <input type="checkbox" id="boardSizeCheckBox">
-                            <span class="toggle-switch round"></span>
-                        </label>
-                    </div>
+                </div>
 
-                    <div class="settings-toggle-switch-container">
-                        <p class="settings-toggle-switch-label">Audio</p>
-                        <label class="switch">
-                            <input type="checkbox" id="audioCheckBox" checked>
-                            <span class="toggle-switch round"></span>
-                        </label>
-                    </div>
+                <div class="settings-container settings-toggle-switch-container">
+                    <p class="settings-toggle-switch-label">Enable Timer</p>
+                    <label class="switch">
+                        <input type="checkbox" id="timerCheckBox">
+                        <span class="toggle-switch round"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-container settings-toggle-switch-container">
+                    <p class="settings-toggle-switch-label">5x5 Board</p>
+                    <label class="switch boardSizeButton">
+                        <input type="checkbox" id="boardSizeCheckBox">
+                        <span class="toggle-switch round"></span>
+                    </label>
+                </div>
+
+                <div class="settings-container settings-toggle-switch-container">
+                    <p class="settings-toggle-switch-label">Audio</p>
+                    <label class="switch">
+                        <input type="checkbox" id="audioCheckBox" checked>
+                        <span class="toggle-switch round"></span>
+                    </label>
+                </div>
+
+                <div class="settings-menu-button-container">
+                    <button id="settingsOkButton" class = "settings-menu-button" type = "button">OK</button>
+                    <button id= "settingsBackButton" class = "settings-menu-button" type = "button">BACK</button>
                 </div>
                 <div class="board-quality-info-popup" id="board-quality-info-popup">
                     <p class="settings-menu-text"><strong>Board quality</strong> is a measure of how "good" a board is based on the total
@@ -102,8 +112,7 @@
                         <strong>Average</strong>: total possible points must be at or above the mean.<br>
                         <strong>Good</strong>: total possible points must be >1 standard deviations above the mean.<br>
                         <strong>Great</strong>: total possible points must be >2 standard deviations above the mean.<br>
-                        <strong>Amazing</strong>: total possible points must be >3 standard deviations above the mean.<br><br>
-                        (Generating amazing boards may take longer)
+                        <strong>Amazing</strong>: total possible points must be >3 standard deviations above the mean.
                         </p>
                     <img src="images/close-settings-button.png" class="close-board-quality-info-button">Close</button>
                 </div>

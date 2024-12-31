@@ -72,6 +72,7 @@ body.preload * {
   align-items: center;
   color: black;
   background: url("images/background-wallpaper-3.jpg");
+  background-size: 45vh;
 
   overflow-x: hidden;
   animation: slide-panel-out 0.25s ease-out forwards;
@@ -79,8 +80,6 @@ body.preload * {
   justify-content: center;
 
   border-radius: 0 0 0 2vh;
-  /* TODO make this look nicer? idk i just threw it in */
-  box-shadow: none;
 }
 
 .word-panel-opened .word-panel-toggle {
@@ -356,15 +355,13 @@ button:active {
   font-size: 100%;
 }
 
-#scoreDisplayTextBox .words {
-  /* font-size: 120%; */
+#wordsText {
   font-size: 1.8vh;
   font-weight: bold;
   line-height: 90%;
 }
 
-#scoreDisplayTextBox .score {
-  /* font-size: 200%; */
+#scoreText {
   font-size: 3vh;
   font-weight: bold;
   line-height: 90%;
@@ -563,12 +560,10 @@ button:active {
 /* Word Selection Line Styles */
 .line {
   height: 1.6vh;
-  /* height: 2px; */
   background-color: rgb(255, 110, 110);
   transform-origin: 0 0;
   position: absolute;
   z-index: 15;
-  /* border-radius: 0.7vh; */
   pointer-events: none;
   transition: opacity 0.25s ease-out;
   /* transition: opacity 0.5s ease-in-out; */
@@ -640,23 +635,36 @@ button:active {
 #settings-menu {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   width: 80%;
-  height: 44%;
-  background-color: #ffe6bd;
+  height: 40%;
+  background-color: #ffe8c4;
 
   border-radius: 2vh;
   box-sizing: border-box;
   padding: 1vh 3vh;
+  
 }
 
 #settings-menu p {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2vh;
-  font-weight: bold;
+  font-size: 1.8vh;
+  /* font-weight: bold; */
   color: black;
 }
 
-#settings-close-btn {
+.settings-header{
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 3vh;
+  font-weight: bold;
+  color: black;
+  margin-top: 1vh;
+  align-self: center;
+  letter-spacing: 0.1vh;
+  margin-bottom: 1vh;
+}
+
+#settings-close-button {
   align-self: end;
   position: absolute;
   cursor: pointer;
@@ -666,8 +674,33 @@ button:active {
   padding-right: 0.1vh;
   padding-bottom: 0.5vh;
 }
-#settings-close-btn:active {
+#settings-close-button:active {
   filter: invert(30%);
+}
+
+.settings-menu-button-container {
+  margin-top: auto;
+  margin-bottom: 2vh;
+  
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.settings-menu-button {
+  padding: 1vh 2vh;
+  font-size: 2vh;
+  width: 35%;
+  font-weight: bold;
+  line-height: 1;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border: none;
+  border-radius: 0.8vh;
+  cursor: pointer;
+  background-color: white;
+  letter-spacing: .15vh;
+  color: #000;
+  box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 /* Board Quality Info Popup */
@@ -692,6 +725,7 @@ button:active {
   width: 69%;
   left: 50%;
   transform: translate(-50%);
+  height: 35.75%;
 
   border-radius: 2vh;
   padding: 1vh 1.5vh;
@@ -722,9 +756,18 @@ button:active {
   height: 2vh;
   width: 2vh;
   padding-top: 0.5vh;
+  cursor: pointer;
 }
 #close-board-quality-info-button:active {
   filter: invert(30%);
+}
+
+.settings-container {
+  border-radius: 1vh;
+  width: 100%;
+  margin: 0.1vh 0;
+  padding: 0.4vh;
+  box-sizing: border-box;
 }
 
 /* Board Quality Slider */
@@ -732,17 +775,10 @@ button:active {
   display: flex;
   width: 100%;
   align-items: center;
-  margin-top: 1.6vh;
 }
 
 .settings-slider-label {
   margin: 0.5vh 0;
-}
-
-.settings-slider-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .slider-container {

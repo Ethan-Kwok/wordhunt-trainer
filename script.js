@@ -244,9 +244,9 @@ class Game {
     this.letterGrid = [];
     this.currWordTextBox = document.getElementById("currWordTextBox");
     this.scoreDisplayTextBox = document.getElementById("scoreDisplayTextBox");
-    this.totalPossiblePointsTextBox = document.getElementById(
-      "totalPossiblePointsTextBox"
-    );
+    this.wordsText = document.getElementById("wordsText");
+    this.scoreText = document.getElementById("scoreText");
+    this.totalPossiblePointsTextBox = document.getElementById("totalPossiblePointsTextBox");
     this.timerTextBox = document.getElementById("timer");
     this.gridCover = document.getElementById("gridCover");
     this.initialCountdownTime = 80;
@@ -271,7 +271,6 @@ class Game {
   init() {
     this.clearGrid();
     this.totalPoints = 0;
-    this.scoreDisplayTextBox.textContent = "SCORE: 0";
     this.foundWordsTrieRoot = null;
     this.numWordsFound = 0;
     this.updateScore();
@@ -280,6 +279,7 @@ class Game {
     this.lastActiveBox = null;
     this.isMouseDown = false;
     this.gridCover.style.display = "none";
+    this.currentLineContainer;
 
     if (document.getElementById("boardSizeCheckBox").checked) {
       this.gridSize = 5;
@@ -302,7 +302,7 @@ class Game {
     this.pointTotal = pointTotal;
     this.wordElementsMap = new Map();
 
-    this.totalPossiblePointsTextBox.innerHTML = `Total Possible Points: ${pointTotal}`;
+    this.totalPossiblePointsTextBox.textContent = `Total Possible Points: ${pointTotal}`;
 
     this.generateBlankWordList(this.possibleWords);
     this.generatePointList(this.possibleWords);
@@ -459,7 +459,10 @@ class Game {
     this.grid.querySelectorAll(".box").forEach((box) => {
       box.addEventListener("mousemove", (e) => this.handleMouseMove(e, box));
     });
+    // Fixes bug where changing the window size will offset the box centers for input detection
+    window.addEventListener('resize', () => this.initBoxCenters());
   }
+
 
   // Input detection
   handleMouseDown(e) {
@@ -470,6 +473,7 @@ class Game {
       if (box && !box.classList.contains("active")) {
         this.activateBox(box);
       }
+      this.initLineContainer();
     }
   }
   handleTouchStart(e) {
@@ -490,8 +494,8 @@ class Game {
   handleTouchMove(e) {
     const touch = e.touches[0];
     const boxes = this.grid.querySelectorAll(".box");
-    // For some reason we can't attach the touchmove listeners to each box individually
-    // because only 1 runs at a time. So we attach it to the document itself and adjust.
+    // We can't attach the touchmove listeners to each box individually because only 1 runs at 
+    // a time. So we attach it to the document itself and adjust.
     boxes.forEach((box) => {
       if (
         this.isMouseDown &&
@@ -524,7 +528,7 @@ class Game {
     this.grid
       .querySelectorAll(".box")
       .forEach((box) => box.classList.remove("active"));
-    this.fadeOutLines();
+    this.fadeOutLines(this.lineContainer);
   }
   handleTouchEnd() {
     this.handleMouseUp();
@@ -591,20 +595,12 @@ class Game {
     this.lastActiveBox = box;
   }
 
-  async fadeOutLines() {
-    const elements = [
-      ...this.grid.querySelectorAll(".line"),
-      ...this.grid.querySelectorAll(".line-cap"),
-    ];
-
-    elements.map((element) => {
-      console.log(`Fading out element: ${element.className}`);
-      element.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`; //TODO
-      element.classList.add("fade-out");
-    });
+  fadeOutLines(lineContainer) {
+    lineContainer.style.transition = `opacity ${Game.CURR_WORD_FADEOUT_TIME}s ease-out`; //TODO
+    lineContainer.classList.add("fade-out");
 
     setTimeout(() => {
-      elements.map((element) => element.remove());
+      lineContainer.remove();
     }, 1000 * Game.CURR_WORD_FADEOUT_TIME);
   }
 
@@ -626,19 +622,15 @@ class Game {
       // The incrementation stops once the current displayed score is less than 5 under the end score.
       if (Math.abs(endScore - currentDisplayedScore) < 5) {
         const finalFormattedScore = endScore.toString().padStart(4, "0");
-        this.scoreDisplayTextBox.innerHTML = `
-                    <div class="words">WORDS: ${this.numWordsFound}</div>
-                    <div class="score">SCORE: ${finalFormattedScore}</div>
-                `;
+        this.wordsText.textContent = `WORDS: ${this.numWordsFound}`;
+        this.scoreText.textContent = `SCORE: ${finalFormattedScore}`;
         return;
       } else {
         const formattedScore = currentDisplayedScore
           .toString()
           .padStart(4, "0");
-        this.scoreDisplayTextBox.innerHTML = `
-                    <div class="words">WORDS: ${this.numWordsFound}</div>
-                    <div class="score">SCORE: ${formattedScore}</div>
-                `;
+        this.wordsText.textContent = `WORDS: ${this.numWordsFound}`;
+        this.scoreText.textContent = `SCORE: ${formattedScore}`;
       }
 
       requestAnimationFrame(animateScore);
@@ -663,6 +655,7 @@ class Game {
   }
 
   drawLine(box1, box2) {
+    const lineWidth = 1.6
     const line = document.createElement("div");
     line.className = "line";
 
@@ -672,26 +665,26 @@ class Game {
     const y2 = box2.offsetTop + box2.offsetHeight / 2;
 
     const length = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-    const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+    const angle = (Math.atan2(y2 - y1, x2 - x1));
 
     line.style.width = `${length}px`;
-    line.style.transform = `rotate(${angle}deg) translateY(-50%)`;
+    line.style.transform = `rotate(${angle}rad) translateY(-50%)`;
     line.style.position = "absolute";
     line.style.top = `${y1}px`;
     line.style.left = `${x1}px`;
 
     this.lineContainer.appendChild(line);
 
-    // add line caps
+    // Add line caps to make ends of lines round
     const lineCap1 = document.createElement("div");
     lineCap1.className = "line-cap";
-    lineCap1.style.top = `calc(${y1}px - 0.8vh)`;
-    lineCap1.style.left = `calc(${x1}px - 0.8vh)`;
+    lineCap1.style.top = `calc(${y1}px - ${lineWidth / 2}vh)`;
+    lineCap1.style.left = `calc(${x1}px - ${lineWidth / 2}vh)`;
 
     const lineCap2 = document.createElement("div");
     lineCap2.className = "line-cap";
-    lineCap2.style.top = `calc(${y2}px - 0.8vh)`;
-    lineCap2.style.left = `calc(${x2}px - 0.8vh)`;
+    lineCap2.style.top = `calc(${y2}px - ${lineWidth / 2}vh)`;
+    lineCap2.style.left = `calc(${x2}px - ${lineWidth / 2}vh)`;
 
     this.lineContainer.appendChild(lineCap1);
     this.lineContainer.appendChild(lineCap2);
@@ -806,7 +799,7 @@ class Game {
       return;
     }
     const wordElement = this.wordElementsMap.get(word);
-    wordElement.innerHTML = word;
+    wordElement.textContent = word;
   }
 
   generatePointList(words = this.possibleWords) {
@@ -823,12 +816,12 @@ class Game {
 
   clearWordList() {
     const wordList = document.getElementById("wordList");
-    wordList.innerHTML = "";
+    wordList.textContent = "";
   }
 
   clearPointList() {
     const pointList = document.getElementById("pointList");
-    pointList.innerHTML = "";
+    pointList.textContent = "";
   }
 
   startTimer(duration) {
@@ -904,16 +897,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     .addEventListener("click", function () {
       game.revealAllWords(game.possibleWords);
     });
-
+  
+  // Settings menu functionality
+  const settingsMenu = document.getElementById("settings-menu");
+  const settingsScreenCover = document.getElementById("settings-screen-cover");
+  
   // Settings button
   const settingsButton = document.querySelector(".settings-button");
-  const settingsScreenCover = document.getElementById("settings-screen-cover");
-  const settingsCloseButton = document.getElementById("settings-close-btn");
-  const settingsMenu = document.getElementById("settings-menu");
-  const boardQualityInfoPopup = document.getElementById(
-    "board-quality-info-popup"
-  ); // For "board quality info button"
-
   settingsButton.addEventListener("click", () => {
     if (
       settingsScreenCover.style.display === "none" ||
@@ -924,46 +914,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  settingsScreenCover.addEventListener("click", (event) => {
-    // Close settings menu when clicking out
-    if (event.target === settingsScreenCover) {
-      // If the board quality info popup is open, then clicking out will only close out of the popup, not the menu.
-      if (boardQualityInfoPopup.classList.contains("show")) {
-        boardQualityInfoPopup.classList.remove("show");
-      } else {
-        settingsScreenCover.style.display = "none";
-        boardQualityInfoPopup.classList.remove("show");
-        game.unpauseTimer();
-      }
-    }
-  });
-
-  settingsCloseButton.addEventListener("click", () => {
-    settingsScreenCover.style.display = "none";
-    boardQualityInfoPopup.classList.remove("show");
-    game.unpauseTimer();
-  });
-
-  // Board quality info button
+  // Board quality info popup
+  const boardQualityInfoPopup = document.getElementById("board-quality-info-popup"); // For "board quality info button"
   const boardQualityInfoButton = document.querySelector(
     ".board-quality-info-button"
   );
   const closeBoardQualityInfoButton = document.querySelector(
     ".close-board-quality-info-button"
   );
-
+  boardQualityInfoButton.addEventListener("click", () => {
+    boardQualityInfoPopup.classList.add("show");
+  });
+  closeBoardQualityInfoButton.addEventListener("click", () => {
+    boardQualityInfoPopup.classList.remove("show");
+  });
+  // If the settings menu is clicked, then the user clicked outside the info popup so close the popup.
   settingsMenu.addEventListener("click", (event) => {
     if (event.target === settingsMenu) {
       boardQualityInfoPopup.classList.remove("show");
     }
-  });
-
-  boardQualityInfoButton.addEventListener("click", () => {
-    boardQualityInfoPopup.classList.add("show");
-  });
-
-  closeBoardQualityInfoButton.addEventListener("click", () => {
-    boardQualityInfoPopup.classList.remove("show");
   });
 
   // Slider sync
@@ -971,8 +940,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   const sliderValue = document.getElementById("slider-value");
 
   // Update text input when slider moves
-  slider.addEventListener("input", () => {
-    const value = parseInt(slider.value);
+  function getBoardQualityCategory(sliderValue) {
+    const value = parseInt(sliderValue);
     let boardQualityCategory;
     if (value <= -5) {
       boardQualityCategory = "Any";
@@ -987,38 +956,86 @@ document.addEventListener("DOMContentLoaded", async function () {
     } else {
       boardQualityCategory = "WAYY TOO HIGH";
     }
-    sliderValue.textContent = boardQualityCategory;
+    return boardQualityCategory;
+  }
+  slider.addEventListener("input", () => {
+    sliderValue.textContent = getBoardQualityCategory(slider.value);
   });
 
-  // Update slider when text input changes
-  sliderValue.addEventListener("input", () => {
-    // const value = Math.min(Math.max(sliderValue.value, slider.min), slider.max); // Ensure within bounds
-    // slider.value = value;
-    // sliderValue.value = value; // Update the input in case it was out of bounds
-    slider.value = sliderValue.value;
-    console.log(slider.value);
-  });
-
-  // Restart game when menu checkboxes are clicked
+  // Closing settings menu
+  const settingsBackButton = document.getElementById("settingsBackButton");
+  const settingsOkButton = document.getElementById("settingsOkButton");
   const timerCheckBox = document.getElementById("timerCheckBox");
   const boardSizeCheckBox = document.getElementById("boardSizeCheckBox");
+  // Audio checkbox
   const audioCheckBox = document.getElementById("audioCheckBox");
 
-  timerCheckBox.addEventListener("change", function () {
-    game.init();
-    game.pauseTimer();
+  let currentSettings = {
+    boardQuality: slider.value,
+    timerEnabled: timerCheckBox.checked,
+    is5x5: boardSizeCheckBox.checked,
+    audioEnabled: audioCheckBox.checked
+  }; 
+
+  // Detect when a user clicks out of the settings menu.
+  settingsScreenCover.addEventListener("click", (event) => {
+    if (event.target === settingsScreenCover) {
+      if (boardQualityInfoPopup.classList.contains("show")) {
+        // If the board quality info popup is open, then clicking out will only close out of the popup, not the menu.
+        boardQualityInfoPopup.classList.remove("show");
+      } else {
+        // Clicking out of the settings menu will not save the new settings.
+        closeSettingsWithoutSaving();
+      }
+    }
   });
 
-  boardSizeCheckBox.addEventListener("change", function () {
-    game.init();
+  settingsBackButton.addEventListener("click", () => {
+    closeSettingsWithoutSaving();
   });
 
-  // Audio
-  audioCheckBox.addEventListener("change", function () {
-    if (audioCheckBox.checked) {
+  settingsOkButton.addEventListener("click", () => {
+    saveAndCloseSettings();
+  })
+
+  function closeSettingsWithoutSaving() {
+    slider.value = currentSettings.boardQuality;
+    sliderValue.textContent = getBoardQualityCategory(slider.value);
+    timerCheckBox.checked = currentSettings.timerEnabled;
+    boardSizeCheckBox.checked = currentSettings.is5x5;
+    audioCheckBox.checked = currentSettings.audioEnabled;
+
+    settingsScreenCover.style.display = "none";
+    boardQualityInfoPopup.classList.remove("show");
+    game.unpauseTimer();
+  }
+
+  function saveAndCloseSettings() {
+    let newBoardQuality = slider.value;
+    let newTimerEnabled = timerCheckBox.checked;
+    let newIs5x5 = boardSizeCheckBox.checked;
+    let newAudioEnabled = audioCheckBox.checked;
+
+    // If any settings (besides audio) are changed, restart the game
+    if (newBoardQuality !== currentSettings.boardQuality ||
+        newTimerEnabled !== currentSettings.timerEnabled ||
+        newIs5x5 !== currentSettings.is5x5) {
+      game.init();
+    }
+    if (newAudioEnabled) {
       Howler.mute(false);
     } else {
       Howler.mute(true);
     }
-  });
+    settingsScreenCover.style.display = "none";
+    boardQualityInfoPopup.classList.remove("show");
+    game.unpauseTimer(); 
+    currentSettings = {
+      boardQuality: newBoardQuality,
+      timerEnabled: newTimerEnabled,
+      is5x5: newIs5x5,
+      audioEnabled: newAudioEnabled
+    };
+  }
+
 });
