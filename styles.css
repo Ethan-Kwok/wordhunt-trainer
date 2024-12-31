@@ -659,6 +659,7 @@ button:active {
 #settings-close-btn {
   align-self: end;
   position: absolute;
+  cursor: pointer;
   height: 2vh;
   width: 2vh;
   padding-top: 1vh;
@@ -747,6 +748,7 @@ button:active {
 .slider-container {
   display: grid;
   grid-template-columns: 4fr 1fr;
+  column-gap: 0.8vw;
   box-sizing: border-box;
   width: 100%;
   align-items: center;
