@@ -313,11 +313,9 @@ class Game {
     this.addEventListeners();
 
     if (document.getElementById("timerCheckBox").checked) {
-      this.timerEnabled = true;
       this.timerTextBox.style.display = "flex";
       this.startTimer(this.initialCountdownTime);
     } else {
-      this.timerEnabled = false;
       this.timerTextBox.style.display = "none";
     }
 
@@ -848,13 +846,13 @@ class Game {
 
     this.timerInterval = setInterval(() => {
       if (this.isPaused) return; // Skip updates if paused
-      if (remainingTime > 0) {
+      if (remainingTime > 0 && document.getElementById("timerCheckBox").checked) {
         remainingTime--;
         updateTimerDisplay();
         if (remainingTime === 4) {
           this.audio_low_on_time.play();
         }
-      } else {
+      } else if (document.getElementById("timerCheckBox").checked) {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
         this.handleMouseUp();
@@ -1012,7 +1010,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     settingsScreenCover.style.display = "none";
     boardQualityInfoPopup.classList.remove("show");
-    game.unpauseTimer();
+    if (timerCheckBox.checked) {
+      game.unpauseTimer();
+    }
   }
 
   function saveAndCloseSettings() {
@@ -1034,7 +1034,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     settingsScreenCover.style.display = "none";
     boardQualityInfoPopup.classList.remove("show");
-    game.unpauseTimer(); 
+    if (timerCheckBox.checked) {
+      game.unpauseTimer();
+    }
     currentSettings = {
       boardQuality: newBoardQuality,
       timerEnabled: newTimerEnabled,
