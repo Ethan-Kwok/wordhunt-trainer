@@ -309,8 +309,6 @@ button:active {
   background-color: #82c09a;
 }
 
-/* TODO CORRECT THIS */
-
 /* Score Display */
 #scoreDisplayBackground {
   position: absolute;
@@ -535,7 +533,7 @@ button:active {
   /* transition: opacity 0.5s ease-out; */
 }
 #currWordTextBox.high {
-  bottom: 58.5%;
+  bottom: 61.5%;
 }
 #currWordTextBox.use-success-color {
   background-color: #7bf67a;
