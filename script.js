@@ -339,30 +339,46 @@ class Game {
   }
 
   initAudio() {
-    // Lazy loading since Howl audio policy requires user gesture to be made before playing 
-    const createAudioProxy = (src) => {
-      let howlInstance = null;
-      return new Proxy({}, {
-        get(target, prop) {
-          if (!howlInstance) {
-            howlInstance = new Howl({ src: [src], preload: true });
-          }
-          return typeof howlInstance[prop] === "function" 
-            ? howlInstance[prop].bind(howlInstance) 
-            : howlInstance[prop];
-        },
-      });
-    };
-    this.audio_activate_nonword_box = createAudioProxy("audio/activate-nonword-box.mp3");
-    this.audio_activate_valid_word_box = createAudioProxy("audio/activate-valid-word-box.mp3");
-    this.audio_submit_nonword = createAudioProxy("audio/submit-nonword.mp3");
-    this.audio_100 = createAudioProxy("audio/100.mp3");
-    this.audio_400 = createAudioProxy("audio/400.mp3");
-    this.audio_800 = createAudioProxy("audio/800.mp3");
-    this.audio_1400 = createAudioProxy("audio/1400.mp3");
-    this.audio_1800 = createAudioProxy("audio/1800.mp3");
-    this.audio_2200 = createAudioProxy("audio/2200+.mp3");
-    this.audio_low_on_time = createAudioProxy("audio/low-on-time.mp3");
+    this.audio_activate_nonword_box = new Howl({
+      src: ["audio/activate-nonword-box.mp3"],
+      preload: true,
+    });
+    this.audio_activate_valid_word_box = new Howl({
+      src: ["audio/activate-valid-word-box.mp3"],
+      preload: true,
+    });
+    this.audio_submit_nonword = new Howl({
+      src: ["audio/submit-nonword.mp3"],
+      preload: true,
+    });
+    this.audio_100 = new Howl({
+      src: ["audio/100.mp3"],
+      preload: true,
+    });
+    this.audio_400 = new Howl({
+      src: ["audio/400.mp3"],
+      preload: true,
+    });
+    this.audio_800 = new Howl({
+      src: ["audio/800.mp3"],
+      preload: true,
+    });
+    this.audio_1400 = new Howl({
+      src: ["audio/1400.mp3"],
+      preload: true,
+    });
+    this.audio_1800 = new Howl({
+      src: ["audio/1800.mp3"],
+      preload: true,
+    });
+    this.audio_2200 = new Howl({
+      src: ["audio/2200+.mp3"],
+      preload: true,
+    });
+    this.audio_low_on_time = new Howl({
+      src: ["audio/low-on-time.mp3"],
+      preload: true,
+    });
   }
 
   playAudioForValidWord(points) {
