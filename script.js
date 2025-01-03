@@ -454,8 +454,6 @@ class Game {
     document.addEventListener("touchend", () => this.handleTouchEnd());
     document.addEventListener("touchmove", (e) => this.handleTouchMove(e));
     document.addEventListener("touchcancel", () => this.handleTouchEnd());
-    // Prevent magnifying glass from appearing on mobile devices
-    document.body.addEventListener('touchcancel', this.ignore, { passive: false });
 
     this.grid.querySelectorAll(".box").forEach((box) => {
       box.addEventListener("mousemove", (e) => this.handleMouseMove(e, box));
@@ -463,12 +461,10 @@ class Game {
     // Fixes bug where changing the window size will offset the box centers for input detection
     window.addEventListener('resize', () => this.initBoxCenters());
   }
-  ignore(e) {
-    e.preventDefault();
-  }
 
   // Input detection
   handleMouseDown(e) {
+    this.fadeOutLines(this.lineContainer);
     // When touching anywhere within the grid, activate the box nearest the initial touch.
     if (document.getElementById("grid").contains(e.target)) {
       this.isMouseDown = true;
@@ -658,7 +654,7 @@ class Game {
   }
 
   drawLine(box1, box2) {
-    const lineWidth = 1.6
+    const lineWidth = 1.4
     const line = document.createElement("div");
     line.className = "line";
 

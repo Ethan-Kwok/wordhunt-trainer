@@ -557,7 +557,7 @@ button:active {
 
 /* Word Selection Line Styles */
 .line {
-  height: 1.6vh;
+  height: 1.4vh;
   background-color: rgb(255, 110, 110);
   transform-origin: 0 0;
   position: absolute;
@@ -568,8 +568,8 @@ button:active {
 }
 
 .line-cap {
-  height: 1.6vh;
-  width: 1.6vh;
+  height: 1.4vh;
+  width: 1.4vh;
   background-color: rgb(255, 110, 110);
   /* transform-origin: 0 0; */
   border-radius: 50%;
