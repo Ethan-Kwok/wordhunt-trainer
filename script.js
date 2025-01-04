@@ -85,6 +85,8 @@ class BoardGenerator {
         );
       }
       let board = [];
+      // To hard code a board, update and uncomment this array:
+      // letters = ['😃', 'S', 'I', 'Y', 'U', 'P', 'L', 'L', 'N', 'L', 'O', 'S', 'A', 'I', 'M', 'U'];
       for (let i = 0; i < gridSize; i++) {
         board.push(letters.slice(i * gridSize, (i + 1) * gridSize));
       }
@@ -875,11 +877,15 @@ class Game {
 document.addEventListener("DOMContentLoaded", async function () {
   // Create "Game"
   await buildTrieFromStaticFile();
+});
+
+document.getElementById("startButton").addEventListener("click", function() {
+  document.getElementById("howToPlayBackground").remove();
 
   const game = new Game("grid");
 
-  // Start button
-  document.getElementById("startButton").addEventListener("click", function () {
+  // Restart button
+  document.getElementById("restartButton").addEventListener("click", function () {
     game.init(); // Reinitialize the game with the current mode
   });
 

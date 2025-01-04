@@ -8,6 +8,14 @@
 </head>
 <body class="preload">
     <div id="phoneScreen" class="">
+        <div id="howToPlayBackground">
+            <div id="howToPlayContainer">
+                <div id="howToPlayText">How to play:</div>
+                <div id="instructionsText">Connect letters together by dragging your finger or cursor. Make as many words as you can.</div>
+                <img src="images/how-to-play-sample-board.png" alt="Sample Board" id="howToPlaySampleBoard">
+                <button type="button" id="startButton" class="start-button button">Start</button>
+            </div>
+        </div>
 
         <div id="topBar">
             <img src="images/pigeon-game-top-bar.png" alt="Top Bar" id="topBarImage">
@@ -32,7 +40,7 @@
             <div id="gridCover"></div>
         </div>
     
-        <button type="button" id="startButton" class="startButton">Restart</button>
+        <button type="button" id="restartButton">Restart</button>
         
         <!-- Wordlist panel popout -->
         <button class="word-panel-toggle" type="button">
@@ -41,7 +49,7 @@
         </button>
 
         <class class="word-panel">
-            <button type="button" id="revealAllWordsButton" class="button">Reveal All</button>
+            <button type="button" id="revealAllWordsButton">Reveal All</button>
             <div id="combinedWordListContainer">
                 <div id="combinedWordList" class="list-box">
                     <div id="wordList" class="word-column"></div>
@@ -64,7 +72,7 @@
 
                 <div class = "settings-container">
                     <div class="settings-slider-label-container">
-                        <p class="settings-slider-label">Board Quality</p>
+                        <p class="settings-slider-label">Minimum Board Quality</p>
                         <div class="board-quality-info-button">
                             <img src="images/question-mark-icon.png" alt="Info">
                         </div>
@@ -102,19 +110,19 @@
                 </div>
 
                 <div class="settings-menu-button-container">
-                    <button id="settingsOkButton" class = "settings-menu-button" type = "button">OK</button>
-                    <button id= "settingsBackButton" class = "settings-menu-button" type = "button">BACK</button>
+                    <button id="settingsOkButton" class="button" type="button">OK</button>
+                    <button id= "settingsBackButton" class="button" type="button">Back</button>
                 </div>
                 <div class="board-quality-info-popup" id="board-quality-info-popup">
-                    <p class="settings-menu-text"><strong>Board quality</strong> is a measure of how "good" a board is based on the total
+                    <p class="settings-menu-text"><strong>Minimum board quality</strong> is a measure of how "good" a board is based on the total
                         possible amount of points from the board.<br><br>
-                        <strong>Any</strong>: no minimum for the total possible points.<br>
+                        <strong>Any</strong>: no minimum for total possible points.<br>
                         <strong>Average</strong>: total possible points must be at or above the mean.<br>
                         <strong>Good</strong>: total possible points must be >1 standard deviations above the mean.<br>
                         <strong>Great</strong>: total possible points must be >2 standard deviations above the mean.<br>
                         <strong>Amazing</strong>: total possible points must be >3 standard deviations above the mean.
                         </p>
-                    <img src="images/close-settings-button.png" class="close-board-quality-info-button">Close</button>
+                    <img src="images/close-settings-button.png" class="close-board-quality-info-button"></button>
                 </div>
             </div>   
         </div>
