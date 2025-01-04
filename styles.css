@@ -52,6 +52,7 @@ body.preload * {
   gap: 1.5vh;
   padding: 1vh 2vh 1vh 2vh;
   border-radius: 0.4vh;
+  box-shadow: 0vh 0.7vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 #howToPlayText {
@@ -71,8 +72,8 @@ body.preload * {
 }
 
 #howToPlaySampleBoard {
-  width: 60%;
-  height: 60%;
+  width: 20vh;
+  height: 20vh;
   /* box-shadow: 0vh 1.5vh 1vh rgba(0, 0, 0, 0.2); */
   background-color: transparent;
   margin: 0.5vh;
