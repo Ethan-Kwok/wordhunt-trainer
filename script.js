@@ -259,7 +259,7 @@ class Game {
 
   // Sets the box sizes, letter container size, and currWord position based on if the board is 4x4 or 5x5.
   updateGameElementSizes() {
-    const lettersContainer = document.getElementById("letters-container");
+    const lettersContainer = document.getElementById("lettersContainer");
     if (this.gridSize == 5) {
       this.grid.classList.add("five-by-five");
       lettersContainer.classList.add("wide");
@@ -1037,8 +1037,8 @@ document.getElementById("startButton").addEventListener("click", function() {
     });
 
   // Settings menu functionality
-  const settingsMenu = document.getElementById("settings-menu");
-  const settingsScreenCover = document.getElementById("settings-screen-cover");
+  const settingsMenu = document.getElementById("settingsMenu");
+  const settingsScreenCover = document.getElementById("settingsScreenCover");
   
   // Settings button
   const settingsButton = document.querySelector(".settings-button");
@@ -1053,7 +1053,7 @@ document.getElementById("startButton").addEventListener("click", function() {
   });
 
   // Board quality info popup
-  const boardQualityInfoPopup = document.getElementById("board-quality-info-popup"); // For "board quality info button"
+  const boardQualityInfoPopup = document.getElementById("boardQualityInfoPopup"); // For "board quality info button"
   const boardQualityInfoButton = document.querySelector(
     ".board-quality-info-button"
   );
@@ -1075,7 +1075,7 @@ document.getElementById("startButton").addEventListener("click", function() {
 
   // Board quality slider sync
   const minQualitySlider = document.getElementById("minimumQualitySlider");
-  const minQualitySliderValue = document.getElementById("slider-value");
+  const minQualitySliderValue = document.getElementById("sliderValue");
 
   // Update text input when slider moves
   function getBoardQualityCategory(minQualitySliderValue) {
@@ -1181,10 +1181,10 @@ document.getElementById("startButton").addEventListener("click", function() {
 
 
   // Secret settings menu functionality
-  const secretSettingsScreenCover = document.getElementById("secret-settings-screen-cover");
+  const secretSettingsScreenCover = document.getElementById("secretSettingsScreenCover");
   
   // Secret settings button
-  document.getElementById("secret-settings-button").addEventListener("click", function () {
+  document.getElementById("secretSettingsButton").addEventListener("click", function () {
     if (
       secretSettingsScreenCover.style.display === "none" ||
       !secretSettingsScreenCover.style.display
@@ -1196,7 +1196,7 @@ document.getElementById("startButton").addEventListener("click", function() {
 
   // Slider sync
   const secretMinQualitySlider = document.getElementById("secretMinimumQualitySlider");
-  const secretMinQualitySliderValue = document.getElementById("secret-slider-value");
+  const secretMinQualitySliderValue = document.getElementById("secretSliderValue");
   const autoSolverSpeedSlider = document.getElementById("autoSolverSpeedSlider");
   const autoSolverSpeedSliderValue = document.getElementById("autoSolverSpeedSliderValue");
 

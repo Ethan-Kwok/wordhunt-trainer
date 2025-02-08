@@ -25,7 +25,7 @@
             <img src="images/player-avatar.png" alt="Top Bar" id="playerAvatar">
         </div> -->
         <div id="scoreDisplayBackground">
-            <button id="secret-settings-button">
+            <button id="secretSettingsButton">
                 <img src="images/player-avatar.png" alt="Player Avatar" id="playerAvatarImage">
             </button>
         </div>
@@ -40,7 +40,7 @@
 
         <input type="text" id="currWordTextBox" readonly/>
     
-        <div id = "letters-container" class="wide">
+        <div id="lettersContainer" class="wide">
             <div id="grid"></div>
             <div id="gridCover"></div>
         </div>
@@ -67,11 +67,11 @@
         </class>
 
         <button class="settings-button" type="button">
-            <img src="images/settings-button.png" alt="Settings" id="settings-button-image">
+            <img src="images/settings-button.png" alt="Settings" id="settingsButtonImage">
         </button>
 
-        <div id="settings-screen-cover" class="settings-screen-cover">
-            <div id="settings-menu" class="settings-menu">
+        <div id="settingsScreenCover" class="settings-screen-cover">
+            <div id="settingsMenu" class="settings-menu">
                 <div class = "settings-header">Settings</div>
 
                 <div class = "settings-container">
@@ -85,7 +85,7 @@
                         <div class="slider">
                             <input type="range" min="-15" max="35" value="-15" id="minimumQualitySlider">
                         </div>
-                        <div id="slider-value" class="slider-value">Any</div>
+                        <div id="sliderValue" class="slider-value">Any</div>
                     </div>
                 </div>
 
@@ -117,7 +117,7 @@
                     <button id="settingsOkButton" class="button" type="button">OK</button>
                     <button id= "settingsBackButton" class="button" type="button">Back</button>
                 </div>
-                <div class="board-quality-info-popup" id="board-quality-info-popup">
+                <div class="board-quality-info-popup" id="boardQualityInfoPopup">
                     <p class="settings-menu-text"><strong>Minimum board quality</strong> is a measure of how "good" a board is based on the total
                         possible amount of points from the board.<br><br>
                         <strong>Any</strong>: no minimum for total possible points.<br>
@@ -131,8 +131,8 @@
             </div>   
         </div>
 
-        <div id="secret-settings-screen-cover" class="settings-screen-cover">
-            <div id="secret-settings-menu" class="settings-menu">
+        <div id="secretSettingsScreenCover" class="settings-screen-cover">
+            <div id="secretSettingsMenu" class="settings-menu">
                 <div class = "settings-header">Secret Settings</div>
 
                 <div class = "settings-container">
@@ -143,7 +143,7 @@
                         <div class="slider">
                             <input type="range" min="-15" max="55" value="-15" id="secretMinimumQualitySlider">
                         </div>
-                        <div id="secret-slider-value" class="slider-value">Any</div>
+                        <div id="secretSliderValue" class="slider-value">Any</div>
                     </div>
                 </div>
                 

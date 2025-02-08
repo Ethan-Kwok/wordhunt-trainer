@@ -400,7 +400,7 @@ button:active {
   text-align: left;
 }
 
-#secret-settings-button {
+#secretSettingsButton {
   width: 26%;
   height: auto;
   margin-left: 2%;
@@ -453,7 +453,7 @@ button:active {
 }
 
 /* Grid Styles */
-#letters-container {
+#lettersContainer {
   width: 76%;
   aspect-ratio: 1 / 1;
   /* max-width: calc(76vh * 0.76);  */
@@ -476,7 +476,7 @@ button:active {
   /* padding: 5%; */
 }
 
-#letters-container.wide {
+#lettersContainer.wide {
   width: 85%;
 }
 
@@ -699,11 +699,11 @@ button:active {
   background: none;
 }
 
-#settings-button-image {
+#settingsButtonImage {
   height: 6.5vh;
   width: 6.5vh;
 }
-.settings-button:active #settings-button-image {
+.settings-button:active #settingsButtonImage {
   filter: invert(30%);
 }
 
