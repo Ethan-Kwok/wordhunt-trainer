@@ -21,8 +21,13 @@
             <img src="images/pigeon-game-top-bar.png" alt="Top Bar" id="topBarImage">
         </div>
 
-        <div id="scoreDisplayBackground">
+        <!-- <div id="scoreDisplayBackground">
             <img src="images/player-avatar.png" alt="Top Bar" id="playerAvatar">
+        </div> -->
+        <div id="scoreDisplayBackground">
+            <button id="secret-settings-button">
+                <img src="images/player-avatar.png" alt="Player Avatar" id="playerAvatarImage">
+            </button>
         </div>
         <div id="scoreDisplayTextBox">
             <div id="wordsText">WORDS: 0</div>
@@ -65,9 +70,8 @@
             <img src="images/settings-button.png" alt="Settings" id="settings-button-image">
         </button>
 
-        <div id="settings-screen-cover">
-            <div id="settings-menu">
-                <!-- <img src="images/close-settings-button.png" id="settings-close-button"> -->
+        <div id="settings-screen-cover" class="settings-screen-cover">
+            <div id="settings-menu" class="settings-menu">
                 <div class = "settings-header">Settings</div>
 
                 <div class = "settings-container">
@@ -81,7 +85,7 @@
                         <div class="slider">
                             <input type="range" min="-15" max="35" value="-15" id="minimumQualitySlider">
                         </div>
-                        <div id="slider-value">Any</div>
+                        <div id="slider-value" class="slider-value">Any</div>
                     </div>
                 </div>
 
@@ -123,6 +127,49 @@
                         <strong>Amazing</strong>: total possible points must be >3 standard deviations above the mean.
                         </p>
                     <img src="images/close-settings-button.png" class="close-board-quality-info-button"></button>
+                </div>
+            </div>   
+        </div>
+
+        <div id="secret-settings-screen-cover" class="settings-screen-cover">
+            <div id="secret-settings-menu" class="settings-menu">
+                <div class = "settings-header">Secret Settings</div>
+
+                <div class = "settings-container">
+                    <div class="settings-slider-label-container">
+                        <p class="settings-slider-label">Minimum Board Quality</p>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider">
+                            <input type="range" min="-15" max="55" value="-15" id="secretMinimumQualitySlider">
+                        </div>
+                        <div id="secret-slider-value" class="slider-value">Any</div>
+                    </div>
+                </div>
+                
+                <div class="settings-container settings-toggle-switch-container">
+                    <p class="settings-toggle-switch-label">Auto-Solver</p>
+                    <label class="switch">
+                        <input type="checkbox" id="autoSolverCheckBox">
+                        <span class="toggle-switch round"></span>
+                    </label>
+                </div>
+
+                <div class = "settings-container">
+                    <div class="settings-slider-label-container">
+                        <p class="settings-slider-label">Auto Solver Speed</p>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider">
+                            <input type="range" min="1" max="100" value="20" id="autoSolverSpeedSlider">
+                        </div>
+                        <div id="autoSolverSpeedSliderValue" class="slider-value">20 CPS</div>
+                    </div>
+                </div>
+
+                <div class="settings-menu-button-container">
+                    <button id="secretSettingsOkButton" class="button" type="button">OK</button>
+                    <button id="secretSettingsBackButton" class="button" type="button">Back</button>
                 </div>
             </div>   
         </div>

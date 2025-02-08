@@ -252,6 +252,7 @@ class Game {
     this.timerTextBox = document.getElementById("timer");
     this.gridCover = document.getElementById("gridCover");
     this.initialCountdownTime = 80;
+    this.activeSolves = []; // This needs to be carried over between games to stop autoSolves
 
     this.init();
   }
@@ -289,15 +290,16 @@ class Game {
       this.gridSize = 4;
     }
 
-    const minimumBoardQualitySlider = document.getElementById(
-      "minimumQualitySlider"
-    );
+    const minimumBoardQualitySlider = document.getElementById("minimumQualitySlider");
+    const secretMinimumQualitySlider = document.getElementById("secretMinimumQualitySlider");
+    const minimumBoardQualityValue = Math.max(minimumBoardQualitySlider.value, secretMinimumQualitySlider.value);
+
     const boardQualitySliderScale = 0.1;
 
     const { letters, possibleWords, pointTotal } =
       BoardGenerator.generateBoardLetters(
         this.gridSize,
-        boardQualitySliderScale * minimumBoardQualitySlider.value
+        boardQualitySliderScale * minimumBoardQualityValue
       );
     this.boardLetters = letters;
     this.possibleWords = possibleWords;
@@ -326,6 +328,15 @@ class Game {
     this.initAudio();
 
     this.initLineContainer();
+
+    this.cancelAllAutoSolves();
+    const autoSolverSpeed = document.getElementById("autoSolverSpeedSlider").value; // CPS
+    this.autoSolverDelayPerCharacter = 1000 / autoSolverSpeed; // MS delay between characters
+    this.autoSolverOn = false;
+    if (document.getElementById("autoSolverCheckBox").checked) {
+      this.autoSolverOn = true;
+      this.autoSolve();
+    }
   }
 
   initBoxCenters() {
@@ -466,6 +477,9 @@ class Game {
 
   // Input detection
   handleMouseDown(e) {
+    if (this.autoSolverOn) {
+      return;
+    }
     this.fadeOutLines(this.lineContainer);
     // When touching anywhere within the grid, activate the box nearest the initial touch.
     if (document.getElementById("grid").contains(e.target)) {
@@ -510,6 +524,18 @@ class Game {
   }
 
   handleMouseUp() {
+    if (this.autoSolverOn) {
+      return;
+    }
+    this.confirmWord();
+  }
+  handleTouchEnd() {
+    if (this.autoSolverOn) {
+      return;
+    }
+    this.confirmWord();
+  }
+  confirmWord() {
     this.isMouseDown = false;
     this.lastActiveBox = null;
     if (
@@ -530,9 +556,6 @@ class Game {
       .querySelectorAll(".box")
       .forEach((box) => box.classList.remove("active"));
     this.fadeOutLines(this.lineContainer);
-  }
-  handleTouchEnd() {
-    this.handleMouseUp();
   }
 
   findClosestBox(x, y) {
@@ -862,15 +885,125 @@ class Game {
   }
 
   pauseTimer() {
-    if (this.timerInterval) {
+    if (this.timerInterval || this.autoSolverOn) {
       this.isPaused = true;
     }
   }
 
   unpauseTimer() {
-    if (this.timerInterval) {
+    if (this.timerInterval || this.autoSolverOn) {
       this.isPaused = false;
     }
+  }
+
+  cancelAllAutoSolves() {
+    // Abort all active solves
+    this.activeSolves.forEach(controller => {
+      controller.abort();
+    });
+    this.activeSolves = []; // Clear the array of active controllers
+  }
+
+  async autoSolve() {
+    // Controller to allow all solves to be canceled on demand
+    const controller = new AbortController();
+    this.activeSolves.push(controller);
+
+    let board = [];
+    let boxCentersGrid = [];
+    for (let i = 0; i < this.gridSize; i++) {
+      board.push(this.boardLetters.slice(i * this.gridSize, (i + 1) * this.gridSize));
+      boxCentersGrid.push(this.boxCenters.slice(i * this.gridSize, (i + 1) * this.gridSize));
+    }
+
+    const visited = board.map((row) => row.map(() => false));
+    const result = new Set();
+  
+    const waitWhilePaused = async () => {
+      while (this.isPaused) {
+        await new Promise((resolve) => setTimeout(resolve, 100)); // Check every 100ms
+      }
+    };
+  
+    const dfs = async (i, j, node, path = "", boxCentersPassed = []) => {
+      if (
+        i < 0 ||
+        i >= board.length ||
+        j < 0 ||
+        j >= board[i].length ||
+        visited[i][j] ||
+        !node
+      ) {
+        return;
+      }
+      visited[i][j] = true;
+  
+      const char = board[i][j];
+      const currBoxCenter = boxCentersGrid[i][j];
+      node = node.children[char];
+  
+      // If a word is found, simulate mouse/touch to form the word
+      if (node && node.isWord && !result.has(path + char)) {
+        result.add(path + char);
+        boxCentersPassed.push(currBoxCenter);
+
+        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        for (let index = 0; index < boxCentersPassed.length; index++) {
+          // Handle pausing
+          if (this.isPaused) {
+            this.confirmWord();
+            index = 0;
+            await waitWhilePaused();
+          }
+          if (controller.signal.aborted) {
+            return;
+          }
+          const boxCenter = boxCentersPassed[index];
+          if (index === 0) {
+            this.fadeOutLines(this.lineContainer);
+            this.initLineContainer()
+            // this.isMouseDown = true;
+          }
+          const box = this.findClosestBox(boxCenter.centerX, boxCenter.centerY);
+          if (box && !box.classList.contains("active")) {
+            this.activateBox(box);
+          }
+          await delay(this.autoSolverDelayPerCharacter);
+        }
+        this.confirmWord();
+        await delay(this.autoSolverDelayPerCharacter);
+      }
+  
+      for (const [di, dj] of [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+        [1, 1],
+        [1, -1],
+        [-1, 1],
+        [-1, -1],
+      ]) {
+        if (controller.signal.aborted) {
+          return;
+        }
+        await dfs(i + di, j + dj, node, path + char, [...boxCentersPassed, currBoxCenter]); // Pause in recursive calls
+      }
+  
+      visited[i][j] = false;
+    };
+  
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        if (controller.signal.aborted) {
+          return;
+        }
+        await waitWhilePaused();
+        await dfs(i, j, trieRoot); // Pause between starting DFS from different cells
+      }
+    }
+  
+    return;
   }
 }
 
@@ -902,7 +1035,7 @@ document.getElementById("startButton").addEventListener("click", function() {
     .addEventListener("click", function () {
       game.revealAllWords(game.possibleWords);
     });
-  
+
   // Settings menu functionality
   const settingsMenu = document.getElementById("settings-menu");
   const settingsScreenCover = document.getElementById("settings-screen-cover");
@@ -940,13 +1073,13 @@ document.getElementById("startButton").addEventListener("click", function() {
     }
   });
 
-  // Slider sync
-  const slider = document.getElementById("minimumQualitySlider");
-  const sliderValue = document.getElementById("slider-value");
+  // Board quality slider sync
+  const minQualitySlider = document.getElementById("minimumQualitySlider");
+  const minQualitySliderValue = document.getElementById("slider-value");
 
   // Update text input when slider moves
-  function getBoardQualityCategory(sliderValue) {
-    const value = parseInt(sliderValue);
+  function getBoardQualityCategory(minQualitySliderValue) {
+    const value = parseInt(minQualitySliderValue);
     let boardQualityCategory;
     if (value <= -5) {
       boardQualityCategory = "Any";
@@ -958,13 +1091,15 @@ document.getElementById("startButton").addEventListener("click", function() {
       boardQualityCategory = "Great";
     } else if (value <= 35) {
       boardQualityCategory = "Amazing";
+    } else if (value <= 45) {
+      boardQualityCategory = "Pro";
     } else {
-      boardQualityCategory = "WAYY TOO HIGH";
+      boardQualityCategory = "WTF"
     }
     return boardQualityCategory;
   }
-  slider.addEventListener("input", () => {
-    sliderValue.textContent = getBoardQualityCategory(slider.value);
+  minQualitySlider.addEventListener("input", () => {
+    minQualitySliderValue.textContent = getBoardQualityCategory(minQualitySlider.value);
   });
 
   // Closing settings menu
@@ -976,7 +1111,7 @@ document.getElementById("startButton").addEventListener("click", function() {
   const audioCheckBox = document.getElementById("audioCheckBox");
 
   let currentSettings = {
-    boardQuality: slider.value,
+    boardQuality: minQualitySlider.value,
     timerEnabled: timerCheckBox.checked,
     is5x5: boardSizeCheckBox.checked,
     audioEnabled: audioCheckBox.checked
@@ -1004,21 +1139,19 @@ document.getElementById("startButton").addEventListener("click", function() {
   })
 
   function closeSettingsWithoutSaving() {
-    slider.value = currentSettings.boardQuality;
-    sliderValue.textContent = getBoardQualityCategory(slider.value);
+    minQualitySlider.value = currentSettings.boardQuality;
+    minQualitySliderValue.textContent = getBoardQualityCategory(minQualitySlider.value);
     timerCheckBox.checked = currentSettings.timerEnabled;
     boardSizeCheckBox.checked = currentSettings.is5x5;
     audioCheckBox.checked = currentSettings.audioEnabled;
 
     settingsScreenCover.style.display = "none";
     boardQualityInfoPopup.classList.remove("show");
-    if (timerCheckBox.checked) {
-      game.unpauseTimer();
-    }
+    game.unpauseTimer();
   }
 
   function saveAndCloseSettings() {
-    let newBoardQuality = slider.value;
+    let newBoardQuality = minQualitySlider.value;
     let newTimerEnabled = timerCheckBox.checked;
     let newIs5x5 = boardSizeCheckBox.checked;
     let newAudioEnabled = audioCheckBox.checked;
@@ -1036,14 +1169,97 @@ document.getElementById("startButton").addEventListener("click", function() {
     }
     settingsScreenCover.style.display = "none";
     boardQualityInfoPopup.classList.remove("show");
-    if (timerCheckBox.checked) {
-      game.unpauseTimer();
-    }
+    game.unpauseTimer();
     currentSettings = {
       boardQuality: newBoardQuality,
       timerEnabled: newTimerEnabled,
       is5x5: newIs5x5,
       audioEnabled: newAudioEnabled
+    };
+  }
+
+
+
+  // Secret settings menu functionality
+  const secretSettingsScreenCover = document.getElementById("secret-settings-screen-cover");
+  
+  // Secret settings button
+  document.getElementById("secret-settings-button").addEventListener("click", function () {
+    if (
+      secretSettingsScreenCover.style.display === "none" ||
+      !secretSettingsScreenCover.style.display
+    ) {
+      secretSettingsScreenCover.style.display = "flex";
+      game.pauseTimer();
+    }
+  });
+
+  // Slider sync
+  const secretMinQualitySlider = document.getElementById("secretMinimumQualitySlider");
+  const secretMinQualitySliderValue = document.getElementById("secret-slider-value");
+  const autoSolverSpeedSlider = document.getElementById("autoSolverSpeedSlider");
+  const autoSolverSpeedSliderValue = document.getElementById("autoSolverSpeedSliderValue");
+
+  // Update text input when slider moves
+  secretMinQualitySlider.addEventListener("input", () => {
+    secretMinQualitySliderValue.textContent = getBoardQualityCategory(secretMinQualitySlider.value);
+  });
+  autoSolverSpeedSlider.addEventListener("input", () => {
+    autoSolverSpeedSliderValue.textContent = autoSolverSpeedSlider.value + " CPS";
+  });
+
+  // Closing secret settings menu
+  const autoSolverCheckBox = document.getElementById("autoSolverCheckBox");
+  const secretSettingsBackButton = document.getElementById("secretSettingsBackButton");
+  const secretSettingsOkButton = document.getElementById("secretSettingsOkButton");
+
+  let currentSecretSettings = {
+    boardQuality: secretMinQualitySlider.value,
+    autoSolverOn: autoSolverCheckBox.checked,
+    autoSolverSpeed: autoSolverSpeedSlider.value
+  }; 
+
+  // Detect when a user clicks out of the secret settings menu.
+  secretSettingsScreenCover.addEventListener("click", (event) => {
+    if (event.target === secretSettingsScreenCover) {
+        closeSecretSettingsWithoutSaving();
+    }
+  });
+
+  secretSettingsBackButton.addEventListener("click", () => {
+    closeSecretSettingsWithoutSaving();
+  });
+
+  secretSettingsOkButton.addEventListener("click", () => {
+    saveAndCloseSecretSettings();
+  })
+
+  function closeSecretSettingsWithoutSaving() {
+    secretMinQualitySlider.value = currentSecretSettings.boardQuality;
+    secretMinQualitySliderValue.textContent = getBoardQualityCategory(secretMinQualitySlider.value);
+    autoSolverCheckBox.checked = currentSecretSettings.autoSolverOn;
+    autoSolverSpeedSlider.value = currentSecretSettings.autoSolverSpeed;
+
+    secretSettingsScreenCover.style.display = "none";
+    game.unpauseTimer();
+  }
+
+  function saveAndCloseSecretSettings() {
+    let newBoardQuality = secretMinQualitySlider.value;
+    let newAutoSolverOn = autoSolverCheckBox.checked;
+    let newAutoSolverSpeed = autoSolverSpeedSlider.value;
+
+    // If any settings are changed, restart the game
+    if (newBoardQuality !== currentSecretSettings.boardQuality ||
+        newAutoSolverOn !== currentSecretSettings.autoSolverOn ||
+        newAutoSolverSpeed !== currentSecretSettings.autoSolverSpeed
+    ) {
+      game.init();
+    }
+    secretSettingsScreenCover.style.display = "none";
+    game.unpauseTimer();
+    currentSecretSettings = {
+      boardQuality: newBoardQuality
     };
   }
 });
